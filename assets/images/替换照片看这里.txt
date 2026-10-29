@@ -6,12 +6,7 @@
 
 home-bg.jpg          首页整屏背景大图（横版，越大越好看）
 portrait.jpg         「关于」页的竖版个人照（3:4 左右）
-
-module-about.jpg     首页卡片 · 关于
-module-journey.jpg   首页卡片 · 足迹
-module-essays.jpg    首页卡片 · 随笔
-module-gallery.jpg   首页卡片 · 相册   ※这个文件不存在时自动显示占位图
-module-contact.jpg   首页卡片 · 联络   ※同上
+module-gallery.jpg   首页「拍立得」卡片里的照片  ※缺文件时自动显示占位图
 
 banner-about.jpg     「关于」页顶部横幅
 banner-journey.jpg   「足迹」页顶部横幅
@@ -21,3 +16,5 @@ banner-gallery.jpg   「相册」页顶部横幅
 相册墙的照片在 assets/gallery/ 文件夹：
 photo-01.jpg ~ photo-09.jpg
 （哪张没放就自动显示占位图，图片说明文字在 gallery.html 里改）
+
+首页其余四件纸上物（名片/门票/便笺/明信片）是代码画的，不需要照片。

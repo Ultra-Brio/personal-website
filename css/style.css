@@ -16,31 +16,47 @@
   --glass-border: rgba(255, 255, 255, 0.12);
   --radius: 18px;
 
-  /* 字体系统：中文标题思源宋体 / 中文正文楷体 / 英文标题 Georgia / 英文正文 Inter Medium */
-  --font-display: Georgia, "Times New Roman", "Noto Serif SC", "Source Han Serif SC",
+  /* 字体系统（sasshi 同源）：标题 Shippori Mincho × 思源宋体 / 正文 霞鹜文楷（楷体感手写）
+     / 标注 Zen Kaku Gothic New × 系统黑体 */
+  --font-display: "Shippori Mincho", "Noto Serif SC", "Source Han Serif SC",
     "Source Han Serif CN", "STZhongsong", "SimSun", serif;
-  --font-zh: "KaiTi", "楷体", "STKaiti", "Noto Serif SC", "SimSun", serif;
-  --font-en-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-en-display: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-  --font-ui: "Inter", "Segoe UI", system-ui, "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", sans-serif;
+  --font-zh: "LXGW WenKai", "Klee One", "KaiTi", "楷体", "STKaiti", serif;
+  --font-hand: "LXGW WenKai", "Klee One", "KaiTi", "楷体", cursive;
+  --font-en-body: "Zen Kaku Gothic New", "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-en-display: "Shippori Mincho", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-ui: "Zen Kaku Gothic New", "Inter", "Segoe UI", system-ui, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --maxw: 1080px;
+
+  /* sasshi 和色 */
+  --ink: #1c232b;        /* 墨 */
+  --body-ink: #36424e;   /* 鉄鼠 */
+  --label-ink: #4f5d69;  /* 藍鼠 */
+  --hairline: #c2cbd2;   /* 白鼠 */
+  --paper: #f8f9f7;      /* 胡粉 */
+  --ai: #2f4f73;         /* 藍：唯一强调色 */
 }
 
-/* 自托管 Inter（latin 子集，避免依赖境外 CDN） */
+/* 自托管字体（latin 子集，避免依赖境外 CDN） */
 @font-face {
   font-family: "Inter";
   src: url("../assets/fonts/inter-latin-400-normal.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+  font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
   font-family: "Inter";
   src: url("../assets/fonts/inter-latin-500-normal.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Shippori Mincho";
+  src: url("../assets/fonts/shippori-mincho-latin-500-normal.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Zen Kaku Gothic New";
+  src: url("../assets/fonts/zen-kaku-gothic-new-latin-400-normal.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -69,7 +85,7 @@ h1, h2, h3, h4,
 }
 
 /* 小型 UI 元素保持无衬线，保证小字号清晰 */
-.nav-links a, .btn, .tag, .orb-label, .essay-tag, .contact-chip,
+.nav-links a, .btn, .tag, .paper-tag, .essay-tag, .contact-chip,
 .tab, .stat-label, .mobile-menu a, .lang-toggle {
   font-family: var(--font-ui);
 }
@@ -726,67 +742,178 @@ body { animation: pageIn 0.5s ease both; }
   margin-top: 2.5vh;
 }
 
-/* ---------- 模块（拍立得卡片）：位置由 JS 每次随机生成 ---------- */
-.orb {
+/* ---------- 5 件纸上物（sasshi 式：名片/门票/便笺/拍立得/明信片） ---------- */
+.paper {
   position: absolute; left: 0; top: 0; z-index: 10;
-  width: clamp(150px, 16vw, 220px);
-  cursor: pointer; text-decoration: none;
+  cursor: grab; text-decoration: none;
   visibility: hidden; /* JS 定位后显示 */
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  will-change: transform;
+  touch-action: none;
+  will-change: left, top;
 }
-.orb.placed { visibility: visible; }
-.orb:hover, .orb:focus-visible {
-  transform: scale(1.16) rotate(0deg);
-  z-index: 50;
-}
-.orb-in { display: block; }
+.paper.placed { visibility: visible; }
+.paper.dragging { cursor: grabbing; z-index: 60; }
+.paper-in { display: block; }
 
-.orb-card {
+/* 纸的公共质感：胡粉白 + 蓝黑阴影 + 白鼠发丝边 */
+.card-face, .ticket-face, .note-face, .polaroid-face, .postcard-face {
   display: block; position: relative;
-  padding: 8px 8px 0;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 6px;
-  box-shadow: 0 14px 44px rgba(10, 11, 24, 0.55), 0 2px 10px rgba(10, 11, 24, 0.4);
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 12px 34px rgba(21, 35, 58, 0.38), 0 2px 8px rgba(21, 35, 58, 0.28);
   transform: rotate(var(--r, 0deg));
-  animation: orbFloat 6.5s ease-in-out infinite;
-  animation-delay: var(--d, 0s);
+  transition: box-shadow 0.3s ease;
 }
-.orb:hover .orb-card, .orb:focus-visible .orb-card {
-  animation: orbWobble 0.6s ease both;
-  box-shadow: 0 26px 70px rgba(255, 138, 92, 0.30), 0 6px 18px rgba(10, 11, 24, 0.5);
-}
-.orb-card img {
-  display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
-  border-radius: 3px;
-}
-.orb-label {
-  display: block; text-align: center;
-  padding: 9px 4px 11px;
-  color: #2a2438; font-size: 0.95rem; font-weight: 600;
-  letter-spacing: 0.28em;
-}
-@keyframes orbFloat {
-  0%, 100% { translate: 0 0; }
-  50%      { translate: 0 -7px; }
-}
-@keyframes orbWobble {
-  0%   { rotate: var(--r, 0deg); }
-  20%  { rotate: calc(var(--r, 0deg) + 3.2deg); }
-  45%  { rotate: calc(var(--r, 0deg) - 2.6deg); }
-  70%  { rotate: calc(var(--r, 0deg) + 1.6deg); }
-  100% { rotate: calc(var(--r, 0deg) - 0.8deg); }
+.paper:hover .card-face, .paper:hover .ticket-face, .paper:hover .note-face,
+.paper:hover .polaroid-face, .paper:hover .postcard-face,
+.paper.dragging .card-face, .paper.dragging .ticket-face, .paper.dragging .note-face,
+.paper.dragging .polaroid-face, .paper.dragging .postcard-face {
+  box-shadow: 0 24px 60px rgba(21, 35, 58, 0.5), 0 4px 14px rgba(21, 35, 58, 0.35);
 }
 
-/* 入场：依次弹出 */
-.orb-in {
+/* 名片 → 关于 */
+.paper-card { width: 225px; }
+.card-face { padding: 18px 20px 15px; }
+.card-name {
+  display: block; font-family: var(--font-display); font-weight: 500;
+  font-size: 1.55rem; letter-spacing: 0.14em; color: var(--ink);
+}
+.card-name-en {
+  display: block; font-family: var(--font-en-display);
+  font-size: 0.66rem; letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--label-ink); margin-top: 3px;
+}
+.card-rule { display: block; height: 1px; background: var(--hairline); margin: 11px 0 9px; }
+.card-role {
+  display: block; font-family: var(--font-ui);
+  font-size: 0.66rem; letter-spacing: 0.1em; color: var(--label-ink); line-height: 1.7;
+}
+
+/* 门票 → 足迹（两侧打孔 + 票根虚线） */
+.paper-ticket { width: 235px; }
+.ticket-face {
+  padding: 14px 18px;
+  mask:
+    radial-gradient(circle 8px at 0 50%, transparent 97%, #000 100%),
+    radial-gradient(circle 8px at 100% 50%, transparent 97%, #000 100%);
+  mask-composite: intersect;
+  -webkit-mask:
+    radial-gradient(circle 8px at 0 50%, transparent 97%, #000 100%),
+    radial-gradient(circle 8px at 100% 50%, transparent 97%, #000 100%);
+  -webkit-mask-composite: source-in;
+}
+.ticket-face::after {
+  content: ""; position: absolute; top: 9px; bottom: 9px; left: 64%;
+  border-left: 1.5px dashed var(--hairline);
+}
+.ticket-title {
+  display: block; font-family: var(--font-ui);
+  font-size: 0.68rem; letter-spacing: 0.3em; color: var(--label-ink);
+}
+.ticket-no {
+  display: block; font-family: var(--font-display);
+  font-size: 1.5rem; letter-spacing: 0.12em; color: var(--ink);
+  margin: 6px 0 4px; font-variant-numeric: tabular-nums;
+}
+.ticket-line {
+  display: block; font-family: var(--font-hand);
+  font-size: 0.92rem; color: var(--body-ink); width: 58%;
+}
+
+/* 便笺 → 随笔（信笺横线 + 手写体） */
+.paper-note { width: 205px; }
+.note-face {
+  padding: 12px 16px 16px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(47, 79, 115, 0.20) 27px 28px),
+    var(--paper);
+}
+.note-text {
+  display: block; font-family: var(--font-hand);
+  font-size: 1.06rem; line-height: 28px; color: var(--ink);
+}
+
+/* 拍立得 → 相册 */
+.paper-polaroid { width: 202px; }
+.polaroid-face { padding: 9px 9px 10px; }
+.polaroid-face img {
+  display: block; width: 100%; aspect-ratio: 1 / 1.02;
+  object-fit: cover; background: var(--night-2);
+}
+.polaroid-cap {
+  display: block; font-family: var(--font-hand);
+  font-size: 0.95rem; color: var(--ink);
+  padding-top: 8px; text-align: center;
+}
+
+/* 明信片 → 联络 */
+.paper-postcard { width: 242px; }
+.postcard-face { padding: 13px 14px 15px; min-height: 118px; }
+.postcard-stamp {
+  position: absolute; top: 10px; right: 10px; width: 44px; height: 52px;
+  border: 1.5px dashed var(--label-ink);
+  background: linear-gradient(135deg, rgba(47, 79, 115, 0.10), rgba(47, 79, 115, 0.30));
+}
+.postcard-stamp::after {
+  content: "✉"; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ai); font-size: 1.05rem;
+}
+.postcard-lines { display: block; margin-top: 36px; }
+.postcard-line {
+  display: block; font-family: var(--font-hand);
+  font-size: 1.04rem; color: var(--ink);
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 5px; margin-bottom: 9px; width: 56%;
+}
+.postcard-line.small { font-size: 0.85rem; width: 72%; color: var(--body-ink); }
+
+/* 栏目名：印在纸外的大图上（白字小标） */
+.paper-tag {
+  display: block; margin-top: 9px; text-align: center;
+  font-size: 0.8rem; letter-spacing: 0.5em; text-indent: 0.5em;
+  color: rgba(244, 246, 248, 0.95);
+  text-shadow: 0 1px 8px rgba(10, 16, 26, 0.85);
+}
+
+/* 入场：依次浮现 */
+.paper-in {
   display: block;
-  opacity: 0; translate: 0 26px; scale: 0.9;
-  animation: orbIn 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) forwards;
+  opacity: 0; translate: 0 22px;
+  animation: paperIn 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) forwards;
   animation-delay: var(--d, 0s);
 }
-@keyframes orbIn {
-  to { opacity: 1; translate: 0 0; scale: 1; }
+@keyframes paperIn {
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* ---------- 底部一行印刷文字（sasshi 式控件） ---------- */
+.desk-line {
+  position: fixed; bottom: 20px; left: 0; right: 0; z-index: 100;
+  text-align: center;
+  font-family: var(--font-ui); font-size: 0.78rem;
+  letter-spacing: 0.22em; color: rgba(240, 244, 248, 0.85);
+  text-shadow: 0 1px 6px rgba(10, 16, 26, 0.75);
+}
+.desk-sep { margin: 0 12px; opacity: 0.55; }
+.desk-word {
+  background: none; border: none; padding: 0;
+  color: inherit; font: inherit; letter-spacing: inherit;
+  cursor: pointer;
+  text-decoration: underline; text-underline-offset: 5px;
+  text-decoration-color: rgba(240, 244, 248, 0.4);
+}
+.desk-word:hover { text-decoration-color: rgba(240, 244, 248, 0.9); }
+
+/* ---------- 右缘竖排柱标题 ---------- */
+.hashira {
+  position: fixed; top: 96px; right: 24px; z-index: 100;
+  writing-mode: vertical-rl;
+  font-family: var(--font-display); font-size: 0.78rem;
+  letter-spacing: 0.52em;
+  color: rgba(240, 244, 248, 0.72);
+  text-shadow: 0 1px 6px rgba(10, 16, 26, 0.75);
+  padding-right: 14px;
+  border-right: 1px solid rgba(240, 244, 248, 0.35);
 }
 
 /* ---------- 点击模块：整屏渐进式失焦转场 ---------- */
@@ -805,30 +932,30 @@ body { animation: pageIn 0.5s ease both; }
   transition-duration: 0.78s;
 }
 .constellation.defocus .constellation-name { opacity: 1; }
-.constellation.defocus .orb:not(.defocus-keep) {
+.constellation.defocus .paper:not(.defocus-keep) {
   opacity: 0;
   transform: scale(0.96);
   transition: opacity 0.45s ease, transform 0.45s ease;
 }
 /* 被点击的卡片多留一拍，再轻轻放大淡出 */
-.orb.defocus-keep {
+.paper.defocus-keep {
   opacity: 1 !important;
   transform: scale(1.14);
   transition: opacity 0.55s ease 0.22s, transform 0.78s cubic-bezier(0.3, 0, 0.2, 1) !important;
   z-index: 60;
 }
-.constellation.defocus .orb.defocus-keep { opacity: 0; }
+.constellation.defocus .paper.defocus-keep { opacity: 0; }
 
 /* ---------- 移动端：星座退化为网格 ---------- */
 @media (max-width: 760px) {
   body.constellation-page { overflow: auto; }
   .constellation {
     position: static; min-height: 100vh;
-    padding: 86px 7vw 60px;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 26px 18px;
+    padding: 92px 8vw 90px;
+    display: flex; flex-wrap: wrap; gap: 30px 20px;
+    justify-content: center; align-items: flex-start;
   }
   .constellation-veil { position: fixed; }
-  .orb { position: static; width: 100%; }
-  .orb:nth-child(odd) { justify-self: start; }
-  .orb:nth-child(even) { justify-self: end; margin-top: 34px; }
+  .paper { position: static !important; touch-action: pan-y; }
+  .hashira { display: none; }
 }

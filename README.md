@@ -53,11 +53,7 @@ Cloudflare Pages（免费），内容用 Sveltia CMS（免费）在浏览器里�
 |---|---|
 | `home-bg.jpg` | 首页整屏背景 |
 | `portrait.jpg` | 关于页竖版个人照 |
-| `module-about.jpg` | 首页卡片 · 关于 |
-| `module-journey.jpg` | 首页卡片 · 足迹 |
-| `module-essays.jpg` | 首页卡片 · 随笔 |
-| `module-gallery.jpg` | 首页卡片 · 相册（缺文件自动显示占位图） |
-| `module-contact.jpg` | 首页卡片 · 联络（同上） |
+| `module-gallery.jpg` | 首页「拍立得」卡片里的照片（缺文件自动显示占位图） |
 | `banner-about.jpg` 等 | 各子页顶部横幅（about/journey/essays/gallery） |
 
 相册墙（放 `assets/gallery/`）：`photo-01.jpg` ~ `photo-09.jpg`，哪张没放就自动
@@ -68,6 +64,13 @@ Cloudflare Pages（免费），内容用 Sveltia CMS（免费）在浏览器里�
 
 ### 改配色
 `css/style.css` 顶部 `:root`。
+
+### 首页「纸上物」
+- 五件物件（名片→关于、门票→足迹、便笺→随笔、拍立得→相册、明信片→联络）
+  可以用鼠标拖动摆放，位置自动记住（localStorage）；轻点即进入对应页面
+- 底部「重新摆放」恢复随机布点；样式在 `css/style.css` 的「纸上物」区段
+- 字体：标题 Shippori Mincho × 思源宋体，正文霞鹜文楷（LXGW WenKai），
+  标注 Zen Kaku Gothic New（sasshi 同款体系）
 
 ## 本地预览
 

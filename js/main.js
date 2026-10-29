@@ -189,55 +189,136 @@
   }
   renderEssays();
 
-  /* ================= 首页星座导航 ================= */
+  /* ================= 首页：可拖拽的 5 件纸上物 ================= */
   const constellation = document.getElementById("constellation");
-  if (constellation) {
-    const orbsEls = [...constellation.querySelectorAll(".orb")];
-
-    // 每次打开随机布局：把页面切成 3×2 网格分区，随机选区 + 区内随机抖动，
-    // 保证 5 张卡片均匀铺满整个页面、互不挤压，且每次打开都不一样
-    const cols = 3, rows = 2;
-    const cells = [];
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) cells.push({ r, c });
-    }
-    for (let i = cells.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cells[i], cells[j]] = [cells[j], cells[i]];
-    }
-    orbsEls.forEach((orb, i) => {
-      const cell = cells[i % cells.length];
-      const cw = 100 / cols, rh = 100 / rows;
-      // 区内抖动：x 留出卡片宽度，y 留出卡片高度，确保不出屏
-      const x = cell.c * cw + 2 + Math.random() * (cw - 19);
-      const y = cell.r * rh + 4.5 + Math.random() * (rh - 38);
-      orb.style.left = x.toFixed(2) + "%";
-      orb.style.top = y.toFixed(2) + "%";
-      orb.style.setProperty("--r", (Math.random() * 5 - 2.5).toFixed(2) + "deg");
-      orb.style.setProperty("--d", (Math.random() * 0.9).toFixed(2) + "s");
-      orb.classList.add("placed");
-
-      // 悬停模块时背景渐进虚化
-      orb.addEventListener("mouseenter", () => constellation.classList.add("bg-blur"));
-      orb.addEventListener("mouseleave", () => constellation.classList.remove("bg-blur"));
-      orb.addEventListener("focus", () => constellation.classList.add("bg-blur"));
-      orb.addEventListener("blur", () => constellation.classList.remove("bg-blur"));
-    });
-  }
-
-  /* ================= 首页星座导航：点击模块 → 渐进式失焦转场 ================= */
-  const orbs = document.querySelectorAll(".orb");
+  const papers = constellation ? [...constellation.querySelectorAll(".paper")] : [];
   const orbVeil = document.getElementById("orbVeil");
-  if (orbs.length && orbVeil) {
-    orbs.forEach((orb) => {
-      orb.addEventListener("click", (e) => {
+
+  if (constellation && papers.length) {
+    const SHELF_KEY = "shelf-pos-v2";
+
+    function place(p, x, y, rot, delay) {
+      p.style.left = x.toFixed(2) + "%";
+      p.style.top = y.toFixed(2) + "%";
+      p.style.setProperty("--r", rot.toFixed(2) + "deg");
+      p.style.setProperty("--d", (delay * 0.14).toFixed(2) + "s");
+      p.classList.add("placed");
+    }
+    function saveShelf() {
+      const data = papers.map((q) => ({
+        x: parseFloat(q.style.left),
+        y: parseFloat(q.style.top),
+        r: parseFloat(q.style.getPropertyValue("--r")) || 0,
+      }));
+      try { localStorage.setItem(SHELF_KEY, JSON.stringify(data)); } catch (e) {}
+    }
+
+    // 初次布点：3×2 网格分区 + 区内抖动，保证均匀铺满又每次不同
+    function scatter() {
+      const cols = 3, rows = 2;
+      const cells = [];
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) cells.push({ r, c });
+      for (let i = cells.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cells[i], cells[j]] = [cells[j], cells[i]];
+      }
+      papers.forEach((p, i) => {
+        const cell = cells[i % cells.length];
+        const cw = 100 / cols, rh = 100 / rows;
+        const x = cell.c * cw + 2 + Math.random() * (cw - 26);
+        const y = cell.r * rh + 4.5 + Math.random() * (rh - 42);
+        place(p, x, y, Math.random() * 6 - 3, i);
+      });
+      try { localStorage.removeItem(SHELF_KEY); } catch (e) {}
+    }
+
+    // 用户摆过的位置优先恢复（架子会记住你的整理）
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(SHELF_KEY) || "null"); } catch (e) {}
+    if (saved && saved.length === papers.length) {
+      saved.forEach((pos, i) => place(papers[i], pos.x, pos.y, pos.r, i));
+    } else {
+      scatter();
+    }
+    const reshuffleBtn = document.getElementById("reshuffle");
+    if (reshuffleBtn) reshuffleBtn.addEventListener("click", scatter);
+
+    // 拖拽 + 惯性；几乎没动 = 点击 → 渐进式失焦转场
+    papers.forEach((p) => {
+      let dragging = false, moved = 0;
+      let startX, startY, origX, origY;
+      let lastX, lastY, lastT, vx = 0, vy = 0, raf = 0;
+      const cardW = () => (p.offsetWidth / window.innerWidth) * 100;
+      const cardH = () => (p.offsetHeight / window.innerHeight) * 100;
+
+      // 原生 <a> 点击一律吞掉：导航完全由 pointerup 里“移动距离”判定接管
+      p.addEventListener("click", (e) => e.preventDefault());
+
+      p.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0) return;
+        dragging = true; moved = 0;
+        startX = e.clientX; startY = e.clientY;
+        origX = parseFloat(p.style.left); origY = parseFloat(p.style.top);
+        lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
+        vx = 0; vy = 0;
+        p.classList.add("dragging");
+        p.setPointerCapture(e.pointerId);
+        cancelAnimationFrame(raf);
         e.preventDefault();
-        const url = orb.getAttribute("href");
-        // 渐进式模糊：背景深度虚化 + 名字浮现 + 被点卡片留一拍后淡出
-        orb.classList.add("defocus-keep");
-        if (constellation) constellation.classList.add("defocus");
-        orbVeil.classList.add("on");
-        setTimeout(() => { window.location.href = url; }, 820);
+      });
+
+      p.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - startX, dy = e.clientY - startY;
+        moved = Math.max(moved, Math.hypot(dx, dy));
+        const now = performance.now();
+        vx = (e.clientX - lastX) / Math.max(1, now - lastT);
+        vy = (e.clientY - lastY) / Math.max(1, now - lastT);
+        lastX = e.clientX; lastY = e.clientY; lastT = now;
+        let nx = origX + (dx / window.innerWidth) * 100;
+        let ny = origY + (dy / window.innerHeight) * 100;
+        nx = Math.min(100 - cardW() - 0.4, Math.max(0.4, nx));
+        ny = Math.min(100 - cardH() - 0.4, Math.max(0.4, ny));
+        p.style.left = nx + "%"; p.style.top = ny + "%";
+        p.style.setProperty("--r", Math.max(-9, Math.min(9, vx * 45)).toFixed(2) + "deg");
+      });
+
+      p.addEventListener("pointerup", () => {
+        if (!dragging) return;
+        dragging = false;
+        p.classList.remove("dragging");
+
+        if (moved < 6) {
+          // 点击 → 渐进式失焦转场
+          const url = p.getAttribute("href");
+          p.classList.add("defocus-keep");
+          constellation.classList.add("defocus");
+          orbVeil.classList.add("on");
+          setTimeout(() => { window.location.href = url; }, 820);
+          return;
+        }
+
+        // 惯性滑行 + 回正旋转，停下后记住位置
+        let px = parseFloat(p.style.left), py = parseFloat(p.style.top);
+        const rot0 = parseFloat(p.style.getPropertyValue("--r")) || 0;
+        const glide = () => {
+          px += vx * 16; py += vy * 16;
+          vx *= 0.9; vy *= 0.9;
+          px = Math.min(100 - cardW() - 0.4, Math.max(0.4, px));
+          py = Math.min(100 - cardH() - 0.4, Math.max(0.4, py));
+          p.style.left = px + "%"; p.style.top = py + "%";
+          const target = Math.max(-9, Math.min(9, vx * 45));
+          const cur = parseFloat(p.style.getPropertyValue("--r")) || 0;
+          p.style.setProperty("--r", (cur + (target - cur) * 0.12).toFixed(2) + "deg");
+          if (Math.abs(vx) > 0.02 || Math.abs(vy) > 0.02) {
+            raf = requestAnimationFrame(glide);
+          } else {
+            p.style.setProperty("--r", rot0.toFixed(2) + "deg");
+            saveShelf();
+          }
+        };
+        raf = requestAnimationFrame(glide);
+        saveShelf();
       });
     });
   }
