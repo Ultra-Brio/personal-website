@@ -1,0 +1,23 @@
+════════════════════════════════════════════════════
+ 换照片：把你的照片改成下面的文件名，放进本文件夹
+ 覆盖同名文件即可，保存后刷新页面就生效。
+ 不用改任何代码。（jpg/png 都行，建议宽度 ≤1600px）
+════════════════════════════════════════════════════
+
+home-bg.jpg          首页整屏背景大图（横版，越大越好看）
+portrait.jpg         「关于」页的竖版个人照（3:4 左右）
+
+module-about.jpg     首页卡片 · 关于
+module-journey.jpg   首页卡片 · 足迹
+module-essays.jpg    首页卡片 · 随笔
+module-gallery.jpg   首页卡片 · 相册   ※这个文件不存在时自动显示占位图
+module-contact.jpg   首页卡片 · 联络   ※同上
+
+banner-about.jpg     「关于」页顶部横幅
+banner-journey.jpg   「足迹」页顶部横幅
+banner-essays.jpg    「随笔」页顶部横幅
+banner-gallery.jpg   「相册」页顶部横幅
+
+相册墙的照片在 assets/gallery/ 文件夹：
+photo-01.jpg ~ photo-09.jpg
+（哪张没放就自动显示占位图，图片说明文字在 gallery.html 里改）

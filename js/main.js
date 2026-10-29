@@ -194,22 +194,25 @@
   if (constellation) {
     const orbsEls = [...constellation.querySelectorAll(".orb")];
 
-    // 每次打开随机生成互不重叠的模块位置
-    const placed = [];
-    let guard = 0;
-    while (placed.length < orbsEls.length && guard < 800) {
-      guard++;
-      const x = 3 + Math.random() * 70;
-      const y = 10 + Math.random() * 62;
-      // 最小间距：横向约 19vw、纵向约 26vh，保证卡片互不挤压
-      if (placed.every((p) => Math.hypot((p.x - x) * 1.4, p.y - y) > 26)) {
-        placed.push({ x, y });
-      }
+    // 每次打开随机布局：把页面切成 3×2 网格分区，随机选区 + 区内随机抖动，
+    // 保证 5 张卡片均匀铺满整个页面、互不挤压，且每次打开都不一样
+    const cols = 3, rows = 2;
+    const cells = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) cells.push({ r, c });
+    }
+    for (let i = cells.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cells[i], cells[j]] = [cells[j], cells[i]];
     }
     orbsEls.forEach((orb, i) => {
-      const p = placed[i] || { x: 4 + i * 19, y: 16 + (i % 2) * 44 };
-      orb.style.left = p.x.toFixed(2) + "%";
-      orb.style.top = p.y.toFixed(2) + "%";
+      const cell = cells[i % cells.length];
+      const cw = 100 / cols, rh = 100 / rows;
+      // 区内抖动：x 留出卡片宽度，y 留出卡片高度，确保不出屏
+      const x = cell.c * cw + 2 + Math.random() * (cw - 19);
+      const y = cell.r * rh + 4.5 + Math.random() * (rh - 38);
+      orb.style.left = x.toFixed(2) + "%";
+      orb.style.top = y.toFixed(2) + "%";
       orb.style.setProperty("--r", (Math.random() * 5 - 2.5).toFixed(2) + "deg");
       orb.style.setProperty("--d", (Math.random() * 0.9).toFixed(2) + "s");
       orb.classList.add("placed");

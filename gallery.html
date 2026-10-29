@@ -40,7 +40,7 @@
 </div>
 
 <!-- ============ 横幅（洛杉矶 · 暮色街头） ============ -->
-<header class="page-banner" style="background-image:url('assets/images/la.jpg')">
+<header class="page-banner" style="background-image:url('assets/images/banner-gallery.jpg')">
   <div class="page-banner-inner">
     <h1 data-i18n="galleryTitle">相册</h1>
     <p data-i18n="gallerySub">支教、宣讲、活动与生活的碎片——点击查看大图。</p>
@@ -49,30 +49,44 @@
 
 <main>
   <section class="section" style="padding-top: 70px;">
+    <!-- 相册槽位：把照片命名为 photo-01.jpg ~ photo-09.jpg 放进 assets/gallery/ 即自动显示；
+         没放的照片自动显示占位图。说明文字改下面的 figcaption 和 data-caption-* -->
     <div class="masonry reveal" id="masonry">
       <figure class="masonry-item" data-caption-zh="乡村支教 · 浙江后岸" data-caption-en="Rural teaching · Hou'an, Zhejiang">
-        <img src="assets/gallery/placeholder-1.svg" alt="乡村支教" loading="lazy">
+        <img src="assets/gallery/photo-01.jpg" alt="乡村支教" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-1.svg?v=2'">
         <figcaption>乡村支教 · 浙江后岸</figcaption>
       </figure>
       <figure class="masonry-item" data-caption-zh="返校宣讲 · 作为队长" data-caption-en="School talks as team leader">
-        <img src="assets/gallery/placeholder-2.svg" alt="返校宣讲" loading="lazy">
+        <img src="assets/gallery/photo-02.jpg" alt="返校宣讲" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-2.svg?v=2'">
         <figcaption>返校宣讲 · 作为队长</figcaption>
       </figure>
       <figure class="masonry-item" data-caption-zh="科普大赛 · 一等奖" data-caption-en="Science communication award">
-        <img src="assets/gallery/placeholder-3.svg" alt="科普大赛" loading="lazy">
+        <img src="assets/gallery/photo-03.jpg" alt="科普大赛" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-3.svg?v=2'">
         <figcaption>科普大赛 · 一等奖</figcaption>
       </figure>
       <figure class="masonry-item" data-caption-zh="活动策划 · 现场记录" data-caption-en="Event planning in action">
-        <img src="assets/gallery/placeholder-4.svg" alt="活动策划" loading="lazy">
+        <img src="assets/gallery/photo-04.jpg" alt="活动策划" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-4.svg?v=2'">
         <figcaption>活动策划 · 现场记录</figcaption>
       </figure>
       <figure class="masonry-item" data-caption-zh="长江边 · 志愿服务" data-caption-en="Volunteering by the Yangtze">
-        <img src="assets/gallery/placeholder-5.svg" alt="长江清岸" loading="lazy">
+        <img src="assets/gallery/photo-05.jpg" alt="长江清岸" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-5.svg?v=2'">
         <figcaption>长江边 · 志愿服务</figcaption>
       </figure>
-      <figure class="masonry-item" data-caption-zh="城市与暮色 · 摄影" data-caption-en="City & dusk · photography">
-        <img src="assets/gallery/placeholder-6.svg" alt="城市暮色" loading="lazy">
+      <figure class="masonry-item" data-caption-zh="城市与暮色 · 摄影" data-caption-en="City &amp; dusk · photography">
+        <img src="assets/gallery/photo-06.jpg" alt="城市暮色" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-6.svg?v=2'">
         <figcaption>城市与暮色 · 摄影</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="旅途中的风景" data-caption-en="Scenes from the road">
+        <img src="assets/gallery/photo-07.jpg" alt="旅途风景" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-2.svg?v=2'">
+        <figcaption>旅途中的风景</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="校园日常" data-caption-en="Campus life">
+        <img src="assets/gallery/photo-08.jpg" alt="校园日常" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-3.svg?v=2'">
+        <figcaption>校园日常</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="和朋友们" data-caption-en="With friends">
+        <img src="assets/gallery/photo-09.jpg" alt="和朋友们" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-1.svg?v=2'">
+        <figcaption>和朋友们</figcaption>
       </figure>
     </div>
   </section>

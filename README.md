@@ -44,11 +44,24 @@ Cloudflare Pages（免费），内容用 Sveltia CMS（免费）在浏览器里�
 ### 改联系方式
 `js/config.js`（邮箱 / GitHub / 微信 / 知乎 / 小红书 / 所在地），留空即不显示。
 
-### 换照片
-- 竖版个人照（关于页）：命名为 `portrait.jpg` 放入 `assets/images/`
-- 相册：照片放进 `assets/gallery/`，编辑 `gallery.html` 复制一个 `<figure class="masonry-item">`
-- 页面横幅：替换 `assets/images/` 下 `la.jpg / nyc.jpg / fuji.jpg / tokyo.jpg`
-- 首页背景与模块照片：`index.html` 里 `constellation` 的 background-image 和各 `orb` 的 img
+### 换照片（最常用）
+
+**一条路径：把照片改成规定的文件名，拖进对应文件夹，覆盖即生效。**
+`assets/images/` 里放了一份《替换照片看这里.txt》速查表。文件名对照：
+
+| 文件名（放 `assets/images/`） | 对应位置 |
+|---|---|
+| `home-bg.jpg` | 首页整屏背景 |
+| `portrait.jpg` | 关于页竖版个人照 |
+| `module-about.jpg` | 首页卡片 · 关于 |
+| `module-journey.jpg` | 首页卡片 · 足迹 |
+| `module-essays.jpg` | 首页卡片 · 随笔 |
+| `module-gallery.jpg` | 首页卡片 · 相册（缺文件自动显示占位图） |
+| `module-contact.jpg` | 首页卡片 · 联络（同上） |
+| `banner-about.jpg` 等 | 各子页顶部横幅（about/journey/essays/gallery） |
+
+相册墙（放 `assets/gallery/`）：`photo-01.jpg` ~ `photo-09.jpg`，哪张没放就自动
+显示占位图；说明文字在 `gallery.html` 里改（`figcaption` 和 `data-caption-*`）。
 
 ### 改全站文案（中英）
 `js/i18n.js`，`zh:` 与 `en:` 一一对应。
