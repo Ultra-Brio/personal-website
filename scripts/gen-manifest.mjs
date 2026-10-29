@@ -5,8 +5,8 @@ import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const dir = join(root, "content", "essays");
-const out = join(root, "essays-manifest.json");
+const dir = join(root, "public", "content", "essays");
+const out = join(root, "public", "essays-manifest.json");
 
 function parseFrontmatter(text) {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);

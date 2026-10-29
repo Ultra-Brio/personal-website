@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>sasshi · folio harness</title>
+    <style>
+      /* The page's own fonts and desk tokens (docs/ART-DIRECTION.md §4, §5): the canvas print reads --serif / --sans / --mono */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background: var(--folio-bg);
+        font: 13px/1.4 var(--sans);
+        color: #555;
+      }
+      :root {
+        --folio-bg: #e3e8eb;
+        --serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Songti SC", serif;
+        --sans: "Zen Kaku Gothic New", "Hiragino Sans", "PingFang SC", sans-serif;
+        --mono: var(--sans);
+        --folio-font: var(--sans);
+      }
+      #root {
+        position: relative;
+        height: 100%;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+      }
+      #bar {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        display: flex;
+        gap: 8px;
+      }
+      #bar button {
+        font: 11px/1 var(--mono);
+        text-transform: uppercase;
+        padding: 7px 10px;
+        border: 0;
+        background: rgb(255 255 255 / 0.6);
+        color: #211e19;
+      }
+      body[data-shot] #bar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="stage"></div>
+      <div id="bar"></div>
+    </div>
+    <script type="module" src="./folio.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,648 @@
+{
+ "about": "Sound effects for the sasshi sound kit (src/sound). Generated with the ElevenLabs Sound Effects API (eleven_text_to_sound_v2) by scripts/sounds/generate.ts, cut, levelled and encoded by scripts/sounds/process.ts from the takes named in scripts/sounds/picks.ts. Files peak at -1 dBFS; gainDb is the playback trim that sets each one's level (from the decoded file); each sound starts \"lead\" seconds into its file (silence that keeps the AAC encoder clean) and lasts \"duration\". AAC-LC, mono, 44.1 kHz, 96 kb/s.",
+ "totalBytes": 300449,
+ "sounds": {
+  "pageTurn": [
+   {
+    "file": "pageTurn-1.m4a",
+    "gainDb": -8.83,
+    "lead": 0.0232,
+    "duration": 0.64,
+    "bytes": 14323,
+    "peakDb": -10,
+    "m50Db": -26.3,
+    "centroid": 4099,
+    "src": "pageTurn-a-3.mp3 0.060-0.700 s",
+    "note": "PVC-sleeve swish that swells for 250 ms and ends on a small crinkle as the page goes over"
+   },
+   {
+    "file": "pageTurn-2.m4a",
+    "gainDb": -12.13,
+    "lead": 0.0232,
+    "duration": 0.5,
+    "bytes": 15439,
+    "peakDb": -13.1,
+    "m50Db": -24.5,
+    "centroid": 5451,
+    "src": "pageTurn-a-2.mp3 0.000-0.620 s",
+    "note": "brighter swish (centroid 5.5 kHz) with a lift at 150 ms; its flat 600 ms run shortened and faded into a turn"
+   },
+   {
+    "file": "pageTurn-3.m4a",
+    "gainDb": -10.5,
+    "lead": 0.0232,
+    "duration": 0.5,
+    "bytes": 12206,
+    "peakDb": -11.5,
+    "m50Db": -24.5,
+    "centroid": 5642,
+    "src": "pageTurn-a-4.mp3 0.040-0.620 s",
+    "note": "a swish that swells over 200 ms; the evenest level of the takes, no crackle spikes"
+   }
+  ],
+  "pageLand": [
+   {
+    "file": "pageLand-1.m4a",
+    "gainDb": -8.98,
+    "lead": 0.0232,
+    "duration": 0.172,
+    "bytes": 4317,
+    "peakDb": -10,
+    "m50Db": -28.2,
+    "centroid": 2946,
+    "src": "pageLand-b-1.mp3 0.290-0.550 s",
+    "note": "one flat slap of a sleeve page, -40 dB in 110 ms; the cleanest onset of the takes"
+   },
+   {
+    "file": "pageLand-2.m4a",
+    "gainDb": -10.3,
+    "lead": 0.0232,
+    "duration": 0.18,
+    "bytes": 4854,
+    "peakDb": -11.3,
+    "m50Db": -28,
+    "centroid": 3205,
+    "src": "pageLand-b-3.mp3 0.150-0.420 s",
+    "note": "a slap, a little brighter (3.2 kHz)"
+   },
+   {
+    "file": "pageLand-3.m4a",
+    "gainDb": -12.67,
+    "lead": 0.0232,
+    "duration": 0.132,
+    "bytes": 4187,
+    "peakDb": -13.7,
+    "m50Db": -28,
+    "centroid": 4355,
+    "src": "pageLand-a-1.mp3 1.270-1.480 s",
+    "note": "the one isolated flap after that take's riffle; the shortest (130 ms)"
+   },
+   {
+    "file": "pageLand-4.m4a",
+    "gainDb": -12.18,
+    "lead": 0.0232,
+    "duration": 0.2,
+    "bytes": 4972,
+    "peakDb": -13.2,
+    "m50Db": -28,
+    "centroid": 1970,
+    "src": "pageLand-b-2.mp3 0.300-0.550 s",
+    "note": "the darkest landing (2 kHz), for variety"
+   }
+  ],
+  "coverOpen": [
+   {
+    "file": "coverOpen-1.m4a",
+    "gainDb": -10.43,
+    "lead": 0.0232,
+    "duration": 0.3745,
+    "bytes": 6680,
+    "peakDb": -11.5,
+    "m50Db": -26,
+    "centroid": 409,
+    "src": "coverOpen-a-3.mp3 0.100-0.500 s",
+    "note": "a faint flex, then a muted low thump (centroid 410 Hz) as the board comes off the stack"
+   },
+   {
+    "file": "coverOpen-2.m4a",
+    "gainDb": -12.37,
+    "lead": 0.0232,
+    "duration": 0.2395,
+    "bytes": 4755,
+    "peakDb": -13.5,
+    "m50Db": -26,
+    "centroid": 264,
+    "src": "coverOpen-a-2.mp3 0.500-0.950 s",
+    "note": "a padded low knock (260 Hz) without ring"
+   }
+  ],
+  "coverClose": [
+   {
+    "file": "coverClose-1.m4a",
+    "gainDb": -11.26,
+    "lead": 0.0232,
+    "duration": 0.3975,
+    "bytes": 7304,
+    "peakDb": -12.3,
+    "m50Db": -25,
+    "centroid": 481,
+    "src": "coverClose-a-3.mp3 0.300-0.780 s",
+    "note": "200 ms of the board's whoosh rising into a padded thump"
+   },
+   {
+    "file": "coverClose-2.m4a",
+    "gainDb": -13.27,
+    "lead": 0.0232,
+    "duration": 0.372,
+    "bytes": 6749,
+    "peakDb": -14.3,
+    "m50Db": -25,
+    "centroid": 347,
+    "src": "coverClose-a-1.mp3 0.080-0.500 s",
+    "note": "a firm, dry board thump with a short lead; -40 dB in 100 ms"
+   },
+   {
+    "file": "coverClose-3.m4a",
+    "gainDb": -10.21,
+    "lead": 0.0232,
+    "duration": 0.4345,
+    "bytes": 7279,
+    "peakDb": -11.2,
+    "m50Db": -25,
+    "centroid": 347,
+    "src": "coverClose-a-2.mp3 0.240-0.700 s",
+    "note": "a brush of the cover's edge, then the thump; the take's later bounce left out"
+   }
+  ],
+  "zip": [
+   {
+    "file": "zip-1.m4a",
+    "gainDb": -17.03,
+    "lead": 0.0232,
+    "duration": 0.597,
+    "bytes": 9616,
+    "peakDb": -18.4,
+    "m50Db": -29,
+    "centroid": 3095,
+    "src": "zip-a-1.mp3 0.000-0.620 s",
+    "note": "a pull that speeds up into the stop (level rises 25 dB over 450 ms)"
+   },
+   {
+    "file": "zip-2.m4a",
+    "gainDb": -16.69,
+    "lead": 0.0232,
+    "duration": 0.512,
+    "bytes": 7986,
+    "peakDb": -18.2,
+    "m50Db": -29,
+    "centroid": 3024,
+    "src": "zip-a-2.mp3 0.050-0.660 s",
+    "note": "a slower pull to the same stop"
+   }
+  ],
+  "pickUp": [
+   {
+    "file": "pickUp-1.m4a",
+    "gainDb": -8.95,
+    "lead": 0.0232,
+    "duration": 0.142,
+    "bytes": 3970,
+    "peakDb": -10,
+    "m50Db": -31.4,
+    "centroid": 3058,
+    "src": "pickUp-b-1.mp3 2.420-2.620 s",
+    "note": "a short paper slide ending in a light tick (3 kHz): the most literal lift"
+   },
+   {
+    "file": "pickUp-2.m4a",
+    "gainDb": -17.49,
+    "lead": 0.0232,
+    "duration": 0.167,
+    "bytes": 6076,
+    "peakDb": -18.5,
+    "m50Db": -31,
+    "centroid": 6398,
+    "src": "pickUp-b-1.mp3 1.070-1.240 s",
+    "note": "a soft papery slide, no tick"
+   },
+   {
+    "file": "pickUp-3.m4a",
+    "gainDb": -16.31,
+    "lead": 0.0232,
+    "duration": 0.1475,
+    "bytes": 5687,
+    "peakDb": -17.3,
+    "m50Db": -31,
+    "centroid": 5531,
+    "src": "pickUp-b-1.mp3 1.550-1.700 s",
+    "note": "a slide that swells for 90 ms and lets go"
+   }
+  ],
+  "drop": [
+   {
+    "file": "drop-1.m4a",
+    "gainDb": -8.98,
+    "lead": 0.0232,
+    "duration": 0.127,
+    "bytes": 3669,
+    "peakDb": -10,
+    "m50Db": -31.6,
+    "centroid": 2108,
+    "src": "drop-b-1.mp3 1.050-1.210 s",
+    "note": "a card landing flat on PVC: a soft slap, 100 ms decay"
+   },
+   {
+    "file": "drop-2.m4a",
+    "gainDb": -8.97,
+    "lead": 0.0232,
+    "duration": 0.077,
+    "bytes": 2765,
+    "peakDb": -10,
+    "m50Db": -32.1,
+    "centroid": 2259,
+    "src": "drop-b-1.mp3 1.710-1.830 s",
+    "note": "the shortest, driest slap of the take"
+   },
+   {
+    "file": "drop-3.m4a",
+    "gainDb": -9,
+    "lead": 0.0232,
+    "duration": 0.0995,
+    "bytes": 3219,
+    "peakDb": -10,
+    "m50Db": -32.4,
+    "centroid": 2619,
+    "src": "drop-b-1.mp3 2.030-2.180 s",
+    "note": "a firmer slap with a small settle after it"
+   }
+  ],
+  "cardUnfold": [
+   {
+    "file": "cardUnfold-1.m4a",
+    "gainDb": -8.32,
+    "lead": 0.0232,
+    "duration": 0.55,
+    "bytes": 8523,
+    "peakDb": -10,
+    "m50Db": -30,
+    "centroid": 2756,
+    "src": "cardUnfold-a-2.mp3 0.030-0.580 s",
+    "note": "the crease letting go, a short swish, a second softer crease"
+   },
+   {
+    "file": "cardUnfold-2.m4a",
+    "gainDb": -11.31,
+    "lead": 0.0232,
+    "duration": 0.5,
+    "bytes": 10773,
+    "peakDb": -12.3,
+    "m50Db": -29,
+    "centroid": 5178,
+    "src": "cardUnfold-a-3.mp3 0.120-0.620 s",
+    "note": "a smoother opening of thick stock, no crackle peaks"
+   }
+  ],
+  "paperRustle": [
+   {
+    "file": "paperRustle-1.m4a",
+    "gainDb": -15.49,
+    "lead": 0.0232,
+    "duration": 0.417,
+    "bytes": 6798,
+    "peakDb": -16.7,
+    "m50Db": -30,
+    "centroid": 2144,
+    "src": "paperRustle-a-1.mp3 0.000-0.500 s",
+    "note": "thick paper flexing, one crisp crackle at 250 ms"
+   },
+   {
+    "file": "paperRustle-2.m4a",
+    "gainDb": -18.25,
+    "lead": 0.0232,
+    "duration": 0.5695,
+    "bytes": 11326,
+    "peakDb": -19.4,
+    "m50Db": -30,
+    "centroid": 2572,
+    "src": "paperRustle-a-2.mp3 0.000-0.600 s",
+    "note": "longer handling, two small crackles near the end"
+   },
+   {
+    "file": "paperRustle-3.m4a",
+    "gainDb": -18.46,
+    "lead": 0.0232,
+    "duration": 0.46,
+    "bytes": 14302,
+    "peakDb": -19.5,
+    "m50Db": -30,
+    "centroid": 3688,
+    "src": "paperRustle-a-3.mp3 0.100-0.560 s",
+    "note": "the smoothest of the three, for small drags"
+   }
+  ],
+  "shake": [
+   {
+    "file": "shake-1.m4a",
+    "gainDb": -14.51,
+    "lead": 0.0232,
+    "duration": 0.65,
+    "bytes": 17400,
+    "peakDb": -15.6,
+    "m50Db": -29,
+    "centroid": 5776,
+    "src": "shake-a-2.mp3 0.050-0.700 s",
+    "note": "four even swells of film and cards, about 7 a second"
+   },
+   {
+    "file": "shake-2.m4a",
+    "gainDb": -15.68,
+    "lead": 0.0232,
+    "duration": 0.62,
+    "bytes": 18945,
+    "peakDb": -16.7,
+    "m50Db": -29,
+    "centroid": 5191,
+    "src": "shake-a-1.mp3 0.000-0.620 s",
+    "note": "four swells, a little darker"
+   },
+   {
+    "file": "shake-3.m4a",
+    "gainDb": -15.62,
+    "lead": 0.0232,
+    "duration": 0.58,
+    "bytes": 13060,
+    "peakDb": -17.4,
+    "m50Db": -29,
+    "centroid": 5708,
+    "src": "shake-a-3.mp3 0.000-0.580 s",
+    "note": "two broad swells: a lazier shake"
+   }
+  ],
+  "tab": [
+   {
+    "file": "tab-1.m4a",
+    "gainDb": -16.26,
+    "lead": 0.0232,
+    "duration": 0.06,
+    "bytes": 2673,
+    "peakDb": -17.3,
+    "m50Db": -41,
+    "centroid": 7183,
+    "src": "tab-a-1.mp3 0.740-0.850 s",
+    "note": "a small paper-button press, -40 dB in 30 ms"
+   },
+   {
+    "file": "tab-2.m4a",
+    "gainDb": -20.55,
+    "lead": 0.0232,
+    "duration": 0.06,
+    "bytes": 2742,
+    "peakDb": -21.6,
+    "m50Db": -41,
+    "centroid": 6444,
+    "src": "tab-a-2.mp3 0.930-1.070 s",
+    "note": "a softer press of the same button"
+   },
+   {
+    "file": "tab-3.m4a",
+    "gainDb": -18.16,
+    "lead": 0.0232,
+    "duration": 0.06,
+    "bytes": 2805,
+    "peakDb": -19.2,
+    "m50Db": -41,
+    "centroid": 6898,
+    "src": "tab-a-2.mp3 1.280-1.420 s",
+    "note": "a third press, between the two"
+   }
+  ],
+  "copy": [
+   {
+    "file": "copy-1.m4a",
+    "gainDb": -18.27,
+    "lead": 0.0232,
+    "duration": 0.1795,
+    "bytes": 4844,
+    "peakDb": -19.3,
+    "m50Db": -40,
+    "centroid": 8164,
+    "src": "copy-b-2.mp3 0.000-0.200 s",
+    "note": "two small ticks 100 ms apart, the second a touch brighter: the only take with a quick, even double"
+   }
+  ]
+ },
+ "impacts": {
+  "paper": {
+   "soft": [
+    {
+     "file": "impact-paper-soft-1.m4a",
+     "gainDb": -15.34,
+     "lead": 0.0232,
+     "duration": 0.062,
+     "bytes": 2601,
+     "peakDb": -16.3,
+     "m50Db": -30,
+     "centroid": 296,
+     "src": "impactPaper-a-3.mp3 1.900-1.980 s",
+     "note": "a soft dull tap (centroid 300 Hz)"
+    },
+    {
+     "file": "impact-paper-soft-2.m4a",
+     "gainDb": -15.63,
+     "lead": 0.0232,
+     "duration": 0.052,
+     "bytes": 2626,
+     "peakDb": -16.6,
+     "m50Db": -30,
+     "centroid": 316,
+     "src": "impactPaper-a-3.mp3 2.265-2.330 s",
+     "note": "a soft dull tap"
+    },
+    {
+     "file": "impact-paper-soft-3.m4a",
+     "gainDb": -15.03,
+     "lead": 0.0232,
+     "duration": 0.047,
+     "bytes": 2170,
+     "peakDb": -16,
+     "m50Db": -30,
+     "centroid": 273,
+     "src": "impactPaper-a-3.mp3 1.535-1.615 s",
+     "note": "a soft dull tap"
+    }
+   ],
+   "medium": [
+    {
+     "file": "impact-paper-medium-1.m4a",
+     "gainDb": -11.44,
+     "lead": 0.0232,
+     "duration": 0.107,
+     "bytes": 3280,
+     "peakDb": -12.4,
+     "m50Db": -30,
+     "centroid": 445,
+     "src": "impactPaper-a-2.mp3 0.675-0.800 s",
+     "note": "a paper knock on film (450 Hz)"
+    },
+    {
+     "file": "impact-paper-medium-2.m4a",
+     "gainDb": -12.31,
+     "lead": 0.0232,
+     "duration": 0.082,
+     "bytes": 2929,
+     "peakDb": -13.3,
+     "m50Db": -30,
+     "centroid": 470,
+     "src": "impactPaper-a-2.mp3 1.765-1.870 s",
+     "note": "a paper knock on film"
+    },
+    {
+     "file": "impact-paper-medium-3.m4a",
+     "gainDb": -15.05,
+     "lead": 0.0232,
+     "duration": 0.102,
+     "bytes": 3334,
+     "peakDb": -16.1,
+     "m50Db": -30,
+     "centroid": 295,
+     "src": "impactPaper-a-3.mp3 1.280-1.400 s",
+     "note": "a paper knock, duller"
+    }
+   ],
+   "hard": [
+    {
+     "file": "impact-paper-hard-1.m4a",
+     "gainDb": -8.96,
+     "lead": 0.0232,
+     "duration": 0.082,
+     "bytes": 2983,
+     "peakDb": -10,
+     "m50Db": -31.3,
+     "centroid": 1491,
+     "src": "impactPaper-a-3.mp3 0.935-1.060 s",
+     "note": "a firm paper slap (1.5 kHz)"
+    },
+    {
+     "file": "impact-paper-hard-2.m4a",
+     "gainDb": -8.99,
+     "lead": 0.0232,
+     "duration": 0.082,
+     "bytes": 3009,
+     "peakDb": -10,
+     "m50Db": -31.4,
+     "centroid": 1162,
+     "src": "impactPaper-a-3.mp3 1.635-1.750 s",
+     "note": "a firm paper slap"
+    },
+    {
+     "file": "impact-paper-hard-3.m4a",
+     "gainDb": -8.98,
+     "lead": 0.0232,
+     "duration": 0.112,
+     "bytes": 3158,
+     "peakDb": -10,
+     "m50Db": -30.5,
+     "centroid": 1141,
+     "src": "impactPaper-a-2.mp3 1.555-1.720 s",
+     "note": "a firm slap with a short settle"
+    }
+   ]
+  },
+  "card": {
+   "soft": [
+    {
+     "file": "impact-card-soft-1.m4a",
+     "gainDb": -9,
+     "lead": 0.0232,
+     "duration": 0.057,
+     "bytes": 2785,
+     "peakDb": -10,
+     "m50Db": -30.8,
+     "centroid": 6021,
+     "src": "impactCard-a-1.mp3 1.235-1.310 s",
+     "note": "a light edge tick (6 kHz)"
+    },
+    {
+     "file": "impact-card-soft-2.m4a",
+     "gainDb": -10.06,
+     "lead": 0.0232,
+     "duration": 0.0525,
+     "bytes": 2943,
+     "peakDb": -11.1,
+     "m50Db": -30,
+     "centroid": 8447,
+     "src": "impactCard-a-1.mp3 1.380-1.450 s",
+     "note": "a light edge tick"
+    },
+    {
+     "file": "impact-card-soft-3.m4a",
+     "gainDb": -11.39,
+     "lead": 0.0232,
+     "duration": 0.0745,
+     "bytes": 3192,
+     "peakDb": -12.4,
+     "m50Db": -30,
+     "centroid": 7642,
+     "src": "impactCard-a-1.mp3 1.515-1.600 s",
+     "note": "a light edge tick, a touch softer"
+    }
+   ],
+   "medium": [
+    {
+     "file": "impact-card-medium-1.m4a",
+     "gainDb": -8.97,
+     "lead": 0.0232,
+     "duration": 0.067,
+     "bytes": 2622,
+     "peakDb": -10,
+     "m50Db": -31.9,
+     "centroid": 3749,
+     "src": "impactCard-a-3.mp3 0.565-0.675 s",
+     "note": "a corner knock (3.7 kHz)"
+    },
+    {
+     "file": "impact-card-medium-2.m4a",
+     "gainDb": -8.97,
+     "lead": 0.0232,
+     "duration": 0.0495,
+     "bytes": 2340,
+     "peakDb": -10,
+     "m50Db": -30.8,
+     "centroid": 2684,
+     "src": "impactCard-a-3.mp3 0.885-0.980 s",
+     "note": "a corner knock"
+    },
+    {
+     "file": "impact-card-medium-3.m4a",
+     "gainDb": -8.98,
+     "lead": 0.0232,
+     "duration": 0.047,
+     "bytes": 2315,
+     "peakDb": -10,
+     "m50Db": -30.5,
+     "centroid": 2620,
+     "src": "impactCard-a-3.mp3 0.228-0.330 s",
+     "note": "a corner knock, warmer"
+    }
+   ],
+   "hard": [
+    {
+     "file": "impact-card-hard-1.m4a",
+     "gainDb": -13.52,
+     "lead": 0.0232,
+     "duration": 0.0645,
+     "bytes": 2599,
+     "peakDb": -14.5,
+     "m50Db": -30,
+     "centroid": 809,
+     "src": "impactCard-a-1.mp3 0.205-0.280 s",
+     "note": "a card landing flat: a full tock (900 Hz); the take's second bounce 65 ms later left out"
+    },
+    {
+     "file": "impact-card-hard-2.m4a",
+     "gainDb": -14.14,
+     "lead": 0.0232,
+     "duration": 0.0695,
+     "bytes": 2646,
+     "peakDb": -15.2,
+     "m50Db": -30,
+     "centroid": 697,
+     "src": "impactCard-a-1.mp3 0.430-0.520 s",
+     "note": "a card landing flat, bounce left out"
+    },
+    {
+     "file": "impact-card-hard-3.m4a",
+     "gainDb": -12.77,
+     "lead": 0.0232,
+     "duration": 0.067,
+     "bytes": 2673,
+     "peakDb": -13.8,
+     "m50Db": -30,
+     "centroid": 639,
+     "src": "impactCard-a-1.mp3 0.660-0.750 s",
+     "note": "a card landing flat, a little rounder, bounce left out"
+    }
+   ]
+  }
+ }
+}

@@ -18,7 +18,7 @@ collections:
   - name: essays
     label: 随笔
     label_singular: 篇
-    folder: content/essays
+    folder: public/content/essays
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     summary: "{{title}} - {{date}}"

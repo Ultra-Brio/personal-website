@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>sasshi · book harness (site fonts)</title>
+    <style>
+      /* book.html with the site's desk tokens and fonts (docs/ART-DIRECTION.md §4, §5); book.html itself stays as it is (the golden) */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background: var(--folio-bg);
+      }
+      :root {
+        --folio-bg: #e3e8eb;
+        --serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Songti SC", serif;
+        --sans: "Zen Kaku Gothic New", "Hiragino Sans", "PingFang SC", sans-serif;
+        --mono: var(--sans);
+        --folio-font: var(--sans);
+      }
+      #root {
+        height: 100%;
+      }
+      body[data-shot] .folio-foot {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./book.polish.tsx"></script>
+  </body>
+</html>

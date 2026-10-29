@@ -1,0 +1,38 @@
+{
+  "name": "sasshi",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "description": "A physical-feeling folio for personal pages: ring-binder albums (cards, postcards) and a resume folio with a clear pouch of objects under real physics.",
+  "scripts": {
+    "dev": "vite",
+    "build": "node scripts/gen-manifest.mjs && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test src",
+    "seal": "bun scripts/seal.ts"
+  },
+  "dependencies": {
+    "@fontsource/klee-one": "5.3.1",
+    "@fontsource/noto-sans-sc": "5.3.1",
+    "@fontsource/noto-serif-sc": "5.3.1",
+    "@fontsource/shippori-mincho": "5.3.0",
+    "@fontsource/zen-kaku-gothic-new": "5.3.1",
+    "lxgw-wenkai-webfont": "1.7.0",
+    "planck": "1.5.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "three": "^0.186.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "playwright-core": "^1.63.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3"
+  }
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>sasshi · liner proofs</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #e3e8eb;
+        font: 12px/1.4 "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+        color: #4f5d69;
+      }
+      #root {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        align-items: flex-start;
+      }
+      figure {
+        margin: 0;
+        display: grid;
+        gap: 8px;
+      }
+      canvas {
+        display: block;
+        box-shadow: 0 8px 17px rgb(21 35 58 / 0.13);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./folio.liner.tsx"></script>
+  </body>
+</html>

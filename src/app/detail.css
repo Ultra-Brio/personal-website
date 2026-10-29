@@ -1,0 +1,240 @@
+/*
+ * The detail view (§1.6.10, §1.6.11, brief O2): an object lifted out of the pouch, or a card out of an album, held up into the
+ * light. No dialog box and no dark scrim: the room goes behind a pale veil, the page's frame stays (the words column is now the
+ * caption, the hashira names the object, the controls are on the bottom line). Nothing behind the veil moves while it is up (r3 D2):
+ * the stage is paused (App: ambient) and blurred once, the veil itself is plain colour (no backdrop-filter, no leaves over the
+ * held thing), so nothing flickers or shifts while it opens, while it is up or while it closes.
+ * Also the DOM versions of the objects: the folded business card, the ticket, the polaroid, the 一筆箋 note, the 郵便はがき.
+ */
+
+/* ------------------------------------------------------------------ the veil */
+dialog.lb { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--tetsu); overflow: hidden; outline: none; }
+/* .8, not .6: the 藍鉄 leather spine and the polaroid under the veil must not read through as dark shapes (the stage canvas also
+   goes soft and half-transparent while a detail is up, paused: app.css). No backdrop-filter: a full-viewport filter that fades in
+   re-filters the whole page every frame */
+dialog.lb::backdrop { background: rgb(233 238 241 / .8); animation: xf-in .36s var(--ease); }
+@media (prefers-reduced-transparency: reduce) { dialog.lb::backdrop { background: rgb(233 238 241 / .96); } }
+dialog.lb[data-closing]::backdrop { opacity: 0; transition: opacity .3s var(--ease); }
+dialog.lb[data-closing] .lb-frame { opacity: 0; transition: opacity .3s var(--ease); }
+dialog.lb[data-closing] .lb-obj { translate: 0 10px; transition: translate .3s var(--ease); }
+.lb:focus-visible { outline: none; }
+/* phone swipes (Modal.tsx): the room and the held thing keep a touch to themselves (a browser pan would cancel the pointer);
+   the caption scrolls vertically; the paper viewer sets its own canvas's */
+.lb-room { position: absolute; inset: 0; touch-action: none; }
+.lb-obj, .lb-obj .held, .lb-obj .still, .lb-obj .still-img, .lb-obj .hagaki, .lb-obj .pc-face, .lb-col, .lb-hands { touch-action: none; }
+.lb-cap { touch-action: pan-y; }
+.lb-frame { position: absolute; inset: 0; pointer-events: none; }
+.lb-frame > * { pointer-events: auto; }
+
+/* the held object: in its rect (layout.ts heldRect), rising with the lift */
+.lb-obj { position: absolute; z-index: 1; left: var(--ol); top: var(--ot); width: var(--ow); height: var(--oh); animation: lift .48s var(--ease) both; }
+@keyframes lift { from { opacity: 0; translate: 0 14px; scale: .985; } }
+/* a still on its way (ItemDetail StillObject): the lift waits at its start, unseen, and rises once the still is there — the thing that
+   rises is the thing that stays (no stand-in swapped for it mid-lift) */
+.lb-obj:has(.still[data-wait]) { animation-play-state: paused; }
+.held { position: relative; width: 100%; height: 100%; display: grid; place-items: center; rotate: var(--rot, 0deg); }
+
+/* ------------------------------------------------------------------ the caption: the words column plus the 間 column (≈ 318 at 1440) */
+.lb-col { position: absolute; z-index: 3; left: calc(var(--x0) + var(--m)); top: var(--m); bottom: var(--m); width: calc(var(--words) * var(--k) + var(--g) + var(--col)); display: flex; flex-direction: column; }
+.lb-col > .id { flex: none; padding-right: calc(var(--g) + var(--col)); }
+/* the caption scrolls inside the column; it ends on the book box's foot (the hands row and its gutter stay clear) unless the
+   actions sit under it. While more lies below, the last 28 px fade and a fine pointer sees a hairline scrollbar (DetailFrame
+   sets data-more). */
+.lb-cap { flex: 1 1 auto; min-height: 0; margin-top: calc(64 * var(--u)); padding: 0 calc(4 * var(--u)) calc(24 * var(--u)) 0; display: flex; flex-direction: column; gap: calc(14 * var(--u)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; outline: none; animation: xf-in .3s var(--ease) .12s both; --fade: calc(28 * var(--u)); }
+.lb-cap:last-child { margin-bottom: calc(var(--row) + var(--g)); }
+.lb-cap[data-more] { -webkit-mask-image: linear-gradient(#000 calc(100% - var(--fade)), transparent); mask-image: linear-gradient(#000 calc(100% - var(--fade)), transparent); }
+@media (hover: hover) and (pointer: fine) { .lb-cap { scrollbar-width: thin; scrollbar-color: var(--shironezu) transparent; } }
+@media not ((hover: hover) and (pointer: fine)) { .lb-cap::-webkit-scrollbar { display: none; } }
+.lb-cap > * { flex: none; }
+.cap-count { font: var(--gw5) calc(12 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .08em; color: var(--ainezu); }
+.cap-count i { font-style: normal; color: var(--usuzumi); margin: 0 .3em; }
+.cap-title { font: 500 calc(28 * var(--u))/calc(34 * var(--u)) var(--mincho); letter-spacing: .01em; color: var(--sumi); text-wrap: balance; }
+.cap-local { margin-top: calc(-8 * var(--u)); font: 400 calc(13 * var(--u))/calc(18 * var(--u)) var(--mincho); letter-spacing: .24em; color: var(--ainezu); }
+/* a Chinese colour card's caption: 月白 is the title, its romaji under it (.24em tracking is for Han) */
+.cap-local.romaji { letter-spacing: .08em; }
+.cap-anec { font: 400 calc(15 * var(--u))/calc(26 * var(--u)) var(--mincho); color: var(--tetsu); text-wrap: pretty; }
+.cap-story { font: var(--gw4) calc(13.5 * var(--u))/calc(23 * var(--u)) var(--gothic); color: var(--tetsu); text-wrap: pretty; }
+/* spec rows: 32 px, hairlines, 20 px line boxes (the descender rule of §1.6.5); a long value wraps, it never clips */
+.lb-specs { display: grid; margin-top: calc(4 * var(--u)); border-top: 1px solid var(--shironezu); }
+.lb-specs .sr, .lb-act-rows .sr { display: flex; align-items: baseline; justify-content: space-between; gap: calc(16 * var(--u)); min-height: calc(32 * var(--u)); padding-block: calc(6 * var(--u)); border-bottom: 1px solid var(--shironezu); }
+.lb-specs dt, .lb-act-rows dt { flex: none; font: var(--gw5) calc(11.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .06em; color: var(--ainezu); white-space: nowrap; }
+.lb-specs dd { min-width: 0; font: var(--gw4) calc(12.5 * var(--u))/calc(20 * var(--u)) var(--gothic); color: var(--sumi); text-align: right; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.lb-specs .v { font: inherit; color: var(--sumi); }
+.cap-links { display: grid; }
+.cap-links a { display: inline-flex; align-items: baseline; gap: calc(2 * var(--u)); min-height: calc(32 * var(--u)); padding-block: calc(6 * var(--u)); font: var(--gw5) calc(12.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .04em; color: var(--sumi); }
+/* the actions at the column's foot, set like the colophon (its bottom hairline on the page's bottom line) */
+.lb-acts { flex: none; padding-bottom: var(--row); }
+.lb-act-rows { display: grid; padding: calc(6 * var(--u)) 0; border-top: 1px solid var(--shironezu); border-bottom: 1px solid var(--shironezu); }
+.lb-act-rows .sr { justify-content: flex-start; gap: 0; min-height: calc(28 * var(--u)); padding-block: calc(4 * var(--u)); border: 0; }
+.lb-act-rows dt { width: calc(64 * var(--u)); }
+.lb-act-rows dd { flex: 1; min-width: 0; font: var(--gw4) calc(12.5 * var(--u))/calc(20 * var(--u)) var(--gothic); color: var(--sumi); }
+.lb-act-rows a, .lb-act-rows .v { display: flex; justify-content: space-between; color: var(--sumi); }
+
+/* the controls on the bottom line, flush with the book box's right edge */
+.lb-hands { position: absolute; z-index: 3; left: var(--box-l); width: var(--box-w); bottom: var(--m); height: var(--row); display: flex; align-items: center; justify-content: flex-end; }
+.lb-frame > .hashira { position: absolute; }
+/* a short desk (height ≤ 800): the story stays in the text version, the caption starts higher and closes up (rows and links 28),
+   so a whole caption fits at 1280 × 720; the fade is shorter */
+@media (max-height: 800px) {
+  :root[data-layout="d"] .cap-story, :root[data-layout="s"] .cap-story { display: none; }
+  :root[data-layout="d"] .lb-specs .sr, :root[data-layout="s"] .lb-specs .sr, :root[data-layout="d"] .cap-links a, :root[data-layout="s"] .cap-links a { min-height: 28px; padding-block: 4px; }
+  :root[data-layout="d"] .lb-cap, :root[data-layout="s"] .lb-cap { --fade: 24px; margin-top: 40px; gap: 10px; }
+  :root[data-layout="d"] .cap-local, :root[data-layout="s"] .cap-local { margin-top: -4px; }
+}
+
+/* phones: the object near the top, the caption under it in a scrolling region, the controls in the bottom row */
+:root[data-layout="p"] .lb-col, :root[data-layout="t"] .lb-col { left: calc(var(--m) + env(safe-area-inset-left, 0px)); right: calc(var(--m) + env(safe-area-inset-right, 0px)); top: calc(var(--m) + env(safe-area-inset-top, 0px)); bottom: calc(20px + var(--row) + 8px + env(safe-area-inset-bottom, 0px)); width: auto; pointer-events: none; }
+:root[data-layout="p"] .lb-col > *, :root[data-layout="t"] .lb-col > * { pointer-events: auto; }
+:root[data-layout="p"] .lb-col > .id, :root[data-layout="t"] .lb-col > .id { padding-right: 40px; }
+/* the caption hangs 14 px under the object's foot (layout.ts held: the object's top 24 px under the book box's); it follows the card
+   down when the card unfolds */
+:root[data-layout="p"] .lb-cap, :root[data-layout="t"] .lb-cap { position: absolute; left: 0; right: 0; top: calc(var(--ob) + 14px - var(--m) - env(safe-area-inset-top, 0px)); bottom: 0; margin: 0; gap: 10px; transition: top .6s var(--ease); }
+/* (a short fade at the foot of the caption: on a short phone the résumé's page leaves it the count and the title, never under it) */
+:root[data-layout="p"] .lb-cap { --fade: 16px; }
+:root[data-layout="t"] .lb-cap { max-width: 600px; }
+:root[data-layout="p"] .cap-title, :root[data-layout="t"] .cap-title { font-size: 20px; line-height: 26px; }
+:root[data-layout="p"] .cap-anec, :root[data-layout="t"] .cap-anec { font-size: 14px; line-height: 23px; }
+:root[data-layout="p"] .cap-local { margin-top: -6px; }
+:root[data-layout="p"] .lb-cap .lb-acts, :root[data-layout="t"] .lb-cap .lb-acts { padding-bottom: 0; }
+:root[data-layout="p"] .lb-hands, :root[data-layout="t"] .lb-hands { left: calc(var(--m) + env(safe-area-inset-left, 0px)); right: calc(var(--m) + env(safe-area-inset-right, 0px)); width: auto; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+:root[data-layout="p"] .lb-frame > .hashira, :root[data-layout="t"] .lb-frame > .hashira { top: calc(22px + env(safe-area-inset-top, 0px)); left: auto; right: calc(var(--m) + env(safe-area-inset-right, 0px)); }
+/* a tablet-sized window held landscape (layout.ts sideBox): the page keeps the phone structure, the detail view is set as on a desk —
+   the caption in a column at the left, the object in the box beside it, the controls on the bottom line under the object */
+:root[data-layout] .lb-frame[data-side] .lb-col { left: calc(var(--m) + env(safe-area-inset-left, 0px)); right: auto; width: var(--sc); bottom: calc(var(--m) + env(safe-area-inset-bottom, 0px)); pointer-events: auto; }
+:root[data-layout] .lb-frame[data-side] .lb-col > .id { padding-right: 0; }
+:root[data-layout] .lb-frame[data-side] .lb-cap { position: relative; top: auto; left: auto; right: auto; bottom: auto; max-width: none; margin-top: 32px; transition: none; }
+:root[data-layout] .lb-frame[data-side] .lb-hands { left: var(--sl); right: calc(var(--m) + env(safe-area-inset-right, 0px)); bottom: calc(var(--m) + env(safe-area-inset-bottom, 0px)); }
+:root[data-layout] .lb-frame[data-side] .paper-flat { padding: 0; }
+
+/* sideways: the caption in the 172 px column, the controls at its foot */
+:root[data-layout="l"] .lb-col { left: calc(20px + env(safe-area-inset-left, 0px)); top: 16px; bottom: calc(16px + var(--row) + 8px); width: 172px; }
+:root[data-layout="l"] .lb-cap { margin-top: 0; gap: 8px; }
+:root[data-layout="l"] .cap-title { font-size: 18px; line-height: 24px; }
+:root[data-layout="l"] .cap-anec { font-size: 13px; line-height: 21px; }
+/* the controls group: one line on a desk and a phone; sideways the pager and the actions take a line each */
+.cg { display: contents; }
+:root[data-layout="l"] .lb-col { bottom: calc(16px + 2 * var(--row) + 8px); }
+:root[data-layout="l"] .lb-hands { left: calc(20px + env(safe-area-inset-left, 0px)); width: 172px; height: auto; bottom: 16px; justify-content: flex-start; }
+:root[data-layout="l"] .lb-hands .ctl { flex-direction: column; align-items: flex-start; }
+:root[data-layout="l"] .lb-hands .ctl > .sep { display: none; }
+:root[data-layout="l"] .lb-hands .cg { display: flex; align-items: center; }
+:root[data-layout="l"] .lb-hands .cg > .w:first-child { padding-left: 0; }
+
+/* ------------------------------------------------------------------ the held things */
+/* the paper viewer's host: the held rect (the viewer frames the spread / the card in it) */
+.paper-host { position: absolute; inset: 0; }
+.paper-host canvas { outline: none; }
+/* stills: the pouch's own render, at 2–3x, scaled down to fit, lifted ~2 cm off the desk */
+.still { position: relative; width: 100%; height: 100%; display: grid; place-items: center; perspective: 1600px; }
+.still-tilt { position: relative; display: grid; place-items: center; width: 100%; height: 100%; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .5s var(--ease); transform-style: preserve-3d; }
+/* sized by ItemDetail (stillStyle): the object fitted into the rect, its baked shadow on the margin round it (the negative margin keeps
+   the object itself where it was); a still with no shadow of its own (an older pouch) gets the page's */
+.still-img { display: block; flex: none; max-width: none; max-height: none; user-select: none; -webkit-user-drag: none; }
+.still-img:not([data-shadow]) { filter: var(--shadow-snap); }
+.flip { position: relative; display: grid; place-items: center; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s var(--ease); }
+.flip[data-turned] { transform: rotateY(180deg); }
+.flip-face { grid-area: 1 / 1; display: grid; place-items: center; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-face.back { transform: rotateY(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .flip, .flip[data-turned] { transform: none; transition: none; }
+  .flip-face { backface-visibility: visible; transition: opacity .2s linear; }
+  .flip-face.back { transform: none; opacity: 0; }
+  .flip[data-turned] .flip-face.front { opacity: 0; }
+  .flip[data-turned] .flip-face.back { opacity: 1; }
+  .lb-obj, .lb-cap { animation: none; }
+  :root[data-layout="p"] .lb-cap, :root[data-layout="t"] .lb-cap { transition: none; }
+}
+
+/* the colour card (85.6 × 54) and the postcard (148 × 105): the painted face over the DOM face */
+.ac-frame { position: relative; width: 100%; aspect-ratio: 85.6 / 54; border-radius: 3.7% / 5.9%; overflow: hidden; box-shadow: var(--shadow-paper); }
+.pic { position: absolute; inset: 0; background: var(--tint); }
+.pic img { width: 100%; height: 100%; object-fit: cover; }
+.painted-face { position: absolute; inset: 0; width: 100%; height: 100%; }
+.held.pc { cursor: pointer; }
+.held.pc .flip { width: 100%; aspect-ratio: 148 / 105; height: auto; }
+.pc-face { position: relative; overflow: hidden; border-radius: 1.5px; box-shadow: var(--shadow-paper); background: #f2f4f2; }
+.pc-face .pic { inset: 2.7%; }
+.held.pc .flip-face.back { container-type: inline-size; }
+
+/* 郵便はがき: the message side (C's design at 760 px, in container units so any width is the same card) */
+.hagaki { --u: calc(100cqw / 760); position: relative; width: 100%; height: 100%; padding: calc(34 * var(--u)) calc(40 * var(--u)); display: grid; grid-template-columns: 1fr 1px calc(266 * var(--u)); column-gap: calc(34 * var(--u)); background: var(--grain), var(--gofun); background-size: 200px, auto; border-radius: 1.5px; box-shadow: 0 1px 1px rgb(var(--sh) / .08), 0 6px 12px rgb(var(--sh) / .10), 0 34px 56px -16px rgb(var(--sh) / .30); text-align: left; cursor: pointer; }
+.hagaki .hd { position: absolute; left: calc(40 * var(--u)); top: calc(30 * var(--u)); font: 600 calc(15 * var(--u))/1 var(--mincho); letter-spacing: .5em; color: var(--ai); }
+.hagaki .msg { padding-top: calc(72 * var(--u)); font: 400 calc(21 * var(--u))/calc(38 * var(--u)) var(--hand); color: var(--pen); text-wrap: pretty; }
+.hagaki .msg { text-wrap: balance; }
+.hagaki .sig { display: block; text-align: right; margin-top: calc(8 * var(--u)); white-space: nowrap; }
+.hagaki .div { display: block; background: rgb(47 79 115 / .35); margin-top: calc(64 * var(--u)); margin-bottom: calc(34 * var(--u)); }
+.hagaki .addr { position: relative; padding-top: calc(236 * var(--u)); display: grid; align-content: start; gap: calc(52 * var(--u)); }
+.hagaki .addr > i { display: block; height: 1px; background: rgb(47 79 115 / .28); }
+.hagaki .stamp { position: absolute; right: 0; top: calc(-6 * var(--u)); width: calc(84 * var(--u)); height: calc(102 * var(--u)); padding: calc(8 * var(--u)); --d: calc(8.4 * var(--u));
+  background: radial-gradient(circle, var(--gofun) calc(2.4 * var(--u)), transparent calc(2.8 * var(--u))) calc(-3 * var(--u)) calc(-3 * var(--u)) / var(--d) var(--d) repeat-x, radial-gradient(circle, var(--gofun) calc(2.4 * var(--u)), transparent calc(2.8 * var(--u))) calc(-3 * var(--u)) calc(100% + 3 * var(--u)) / var(--d) var(--d) repeat-x,
+    radial-gradient(circle, var(--gofun) calc(2.4 * var(--u)), transparent calc(2.8 * var(--u))) calc(-3 * var(--u)) calc(-3 * var(--u)) / var(--d) var(--d) repeat-y, radial-gradient(circle, var(--gofun) calc(2.4 * var(--u)), transparent calc(2.8 * var(--u))) calc(100% + 3 * var(--u)) calc(-3 * var(--u)) / var(--d) var(--d) repeat-y, #fdfdfb;
+  box-shadow: 0 0 0 .5px rgb(var(--sh) / .08); z-index: 1; }
+.hagaki .stamp > span { display: block; width: 100%; height: 100%; background-size: cover; background-position: center; }
+.hagaki .pm { position: absolute; right: calc(52 * var(--u)); top: calc(22 * var(--u)); width: calc(92 * var(--u)); height: calc(92 * var(--u)); border-radius: 50%; border: calc(1.4 * var(--u)) solid rgb(28 35 43 / .55); display: grid; place-items: center; text-align: center; font: var(--gw5) calc(9 * var(--u))/calc(13 * var(--u)) var(--gothic); letter-spacing: .14em; color: rgb(28 35 43 / .6); rotate: -12deg; z-index: 2; mix-blend-mode: multiply; }
+.hagaki .pm::before { content: ""; position: absolute; inset: calc(7 * var(--u)); border-radius: 50%; border: calc(.8 * var(--u)) solid rgb(28 35 43 / .4); }
+.hagaki .pm b { display: block; font: 500 calc(12 * var(--u))/calc(16 * var(--u)) var(--mincho); letter-spacing: .3em; }
+
+/* ------------------------------------------------------------------ DOM objects (no WebGL, or while a still renders) */
+/* the business card that folds once (91 × 55 closed) */
+.paper-flat { position: absolute; inset: 0; display: grid; place-items: center; }
+.fc { --cw: min(100%, calc(var(--oh) * 1.6545 / 2)); position: relative; width: var(--cw); aspect-ratio: 91 / 55; perspective: 1600px; cursor: pointer; container-type: inline-size; }
+.fc-inside { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6cqw; padding: 7cqw 6cqw; background: #f2f3f0; border-radius: 1.2%; box-shadow: var(--shadow-paper); }
+.fc-note { font: 400 3.6cqw/1.7 var(--mincho); color: #2e3946; align-self: center; }
+.fc-rows { display: grid; align-content: center; }
+.fc-rows > div { display: flex; justify-content: space-between; gap: 2cqw; padding-block: 1.4cqw; border-bottom: 1px solid #d3dae0; }
+.fc-rows dt { font: var(--gw4) 2.6cqw/1.6 var(--gothic); color: #56626d; }
+.fc-rows dd { font: var(--gw4) 2.9cqw/1.6 var(--gothic); color: #1c232b; }
+.fc-leaf { position: absolute; inset: 0; transform-origin: 50% 0; transform-style: preserve-3d; transition: transform .7s var(--ease); }
+.fc[data-open] .fc-leaf { transform: rotateX(178deg); }
+.fc-front, .fc-back { position: absolute; inset: 0; border-radius: 1.2%; background: var(--grain), #f2f3f0; background-size: 200px, auto; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: var(--shadow-paper); }
+.fc-front { display: grid; align-content: end; padding: 7cqw 7cqw 8cqw; }
+.fc-back { transform: rotateX(180deg); display: grid; place-items: center; }
+.fc-disc { position: absolute; left: 7cqw; top: 7cqw; width: 2.2cqw; height: 2.2cqw; border-radius: 50%; background: var(--ai); }
+.fc-back .fc-disc { position: static; }
+.fc-name { font: 500 7cqw/1.2 var(--mincho); color: #1c232b; }
+.fc-role { font: 400 3.6cqw/1.5 var(--mincho); color: #384450; }
+.fc-tag { margin-top: 3cqw; font: var(--gw5) 2.4cqw/1.5 var(--gothic); letter-spacing: .14em; color: #56626d; }
+
+/* the ticket */
+.tk { --tk: #2f4f73; position: relative; display: grid; grid-template-columns: 1fr auto 13%; width: min(100%, calc(var(--oh) * 2.2)); aspect-ratio: 2.2 / 1; container-type: inline-size; background: var(--grain), #eef0ed; background-size: 200px, auto; border-radius: 1%; box-shadow: var(--shadow-paper); overflow: hidden; color: #1c232b; }
+.tk-main { display: grid; align-content: start; gap: 1.4cqw; padding: 5cqw 4cqw 4cqw 6cqw; }
+.tk-ev { font: 500 4.6cqw/1.2 var(--mincho); }
+.tk-talk { font: 400 2.6cqw/1.4 var(--mincho); color: #384450; }
+.tk-rows { display: flex; flex-wrap: wrap; gap: 1cqw 3.6cqw; margin-top: 2cqw; font: var(--gw4) 2cqw/1.5 var(--gothic); }
+.tk-rows b { display: block; font: var(--gw5) 1.5cqw/1.5 var(--gothic); letter-spacing: .14em; color: #56626d; }
+.tk-no { margin-top: auto; font: var(--gw5) 1.6cqw/1.5 var(--gothic); letter-spacing: .1em; color: #56626d; }
+.tk-date { position: relative; display: grid; align-content: center; justify-items: center; padding: 0 4cqw; border-left: 1px dashed #94a0aa; }
+.tk-day { font: 500 12cqw/1 var(--mincho); }
+.tk-mo { font: var(--gw5) 1.8cqw/1.5 var(--gothic); letter-spacing: .1em; color: #56626d; }
+.tk-punch { position: absolute; right: 2.4cqw; top: 3cqw; width: 2.4cqw; height: 2.4cqw; border-radius: 50%; background: var(--asagiri); box-shadow: inset 0 1px 1px rgb(var(--sh) / .3); }
+.tk-stub { display: grid; place-items: center; background: var(--tk); color: #f4f6f7; }
+.tk-stub span { writing-mode: vertical-rl; font: var(--gw5) 1.8cqw/1 var(--gothic); letter-spacing: .18em; }
+.tk-back { display: grid; place-items: center; grid-template-columns: 1fr; gap: 2cqw; align-content: center; }
+.tk-disc { width: 2.2cqw; height: 2.2cqw; border-radius: 50%; background: var(--ai); }
+.tk-terms { font: var(--gw4) 1.8cqw/1.6 var(--gothic); color: #56626d; text-align: center; max-width: 60%; }
+
+/* the polaroid (88 × 107 frame, a square photo) */
+.pol { width: min(100%, calc(var(--oh) * .82)); aspect-ratio: 88 / 107; padding: 4.6% 4.6% 0; container-type: inline-size; background: var(--grain), #f1f2f0; background-size: 160px, auto; border-radius: 1px; box-shadow: var(--shadow-paper); }
+.pol-photo { width: 100%; aspect-ratio: 1; background: var(--tint, #c9d3da); overflow: hidden; box-shadow: inset 0 0 0 .5px rgb(0 0 0 / .25); }
+.pol-photo img { width: 100%; height: 100%; object-fit: cover; }
+.pol-cap { display: flex; align-items: center; height: 22%; padding-left: 2.6%; font: 400 6.2cqw/1 var(--hand); color: var(--pen); letter-spacing: .01em; }
+.pol-back { display: grid; align-content: center; gap: 4cqw; padding: 10%; }
+.pol-hand { font: 400 6cqw/1.6 var(--hand); color: var(--pen); }
+.pol-date { font: 400 5cqw/1.4 var(--hand); color: var(--pen); text-align: right; }
+
+/* the 一筆箋 note (82 × 182, faint 藍 ruling) */
+.note { position: relative; height: 100%; max-width: 100%; aspect-ratio: 82 / 182; container-type: inline-size; padding: 14cqw 10cqw 20cqw; display: flex; flex-direction: column; background: repeating-linear-gradient(transparent 0 calc(11cqw - 1px), rgb(47 79 115 / .16) calc(11cqw - 1px) 11cqw) 0 12cqw / 100% calc(100% - 34cqw) no-repeat, var(--grain), #f6f7f5; background-size: 100% calc(100% - 34cqw), 200px, auto; box-shadow: var(--shadow-paper); color: var(--pen); }
+.note-text { font: 400 6.6cqw/11cqw var(--hand); }
+.note-sign { margin-top: 11cqw; font: 400 6.6cqw/11cqw var(--hand); text-align: right; }
+.note-date { display: block; font-size: 5cqw; }
+.note-foot { position: absolute; left: 0; right: 0; bottom: 8cqw; display: flex; justify-content: center; align-items: center; gap: 3cqw; font: 500 4.4cqw/1 var(--mincho); letter-spacing: .3em; color: var(--ai); }
+.note-foot i { width: 2.6cqw; height: 2.6cqw; border-radius: 50%; background: var(--ai); }
+
+/* phones: the DOM paper lies where the 3D paper would (inside the viewer's gutters); the card's cover opens upwards from its foot */
+:root[data-layout="p"] .paper-flat, :root[data-layout="t"] .paper-flat { padding: var(--oy, 0) var(--ox, 0); }
+:root[data-layout="p"] .paper-flat[data-kind="card"], :root[data-layout="t"] .paper-flat[data-kind="card"] { place-items: end center; }
+:root[data-layout="p"] .paper-flat .fc, :root[data-layout="t"] .paper-flat .fc { --cw: 100%; }
+
+/* the DOM résumé spread (letter.css sets the pages) */
+.paper-flat[data-kind="resume"] .rs-spread { height: 100%; max-width: 100%; aspect-ratio: 420 / 297; }
+:root[data-layout="p"] .paper-flat[data-kind="resume"] .rs-spread, :root[data-layout="t"] .paper-flat[data-kind="resume"] .rs-spread { aspect-ratio: 210 / 297; }

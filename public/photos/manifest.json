@@ -1,0 +1,145 @@
+[
+  {
+    "file": "photos/polaroid-kamakura-window.jpg",
+    "use": "polaroid",
+    "place": "Kamakura, Kanagawa",
+    "caption_en": "A café window over the sea, Kamakura",
+    "caption_ja": "鎌倉、海の見える窓",
+    "photographer": "note thanun",
+    "source": "https://unsplash.com/photos/a-person-standing-in-front-of-a-window-looking-out-at-the-ocean-FEgIW24CS_I",
+    "license": "Unsplash License",
+    "aspect": "1:1"
+  },
+  {
+    "file": "photos/kyoto-ryoanji-snow.jpg",
+    "use": "postcard",
+    "place": "Ryōan-ji, Kyoto",
+    "caption_en": "Ryōan-ji after snow",
+    "caption_ja": "雪の龍安寺",
+    "photographer": "Leongsan",
+    "source": "https://unsplash.com/photos/zen-garden-with-rocks-and-raked-sand-in-snow-0bVWDgFx_FA",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/naoshima-torii-beach.jpg",
+    "use": "postcard",
+    "place": "Naoshima, Kagawa",
+    "caption_en": "A stone torii on the beach, Naoshima",
+    "caption_ja": "直島、浜辺の鳥居",
+    "photographer": "Victor Lu",
+    "source": "https://unsplash.com/photos/brown-wooden-stand-on-white-sand-near-body-of-water-during-daytime-SRcCvI79WRw",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/kamakura-inamuragasaki-blue-hour.jpg",
+    "use": "postcard",
+    "place": "Inamuragasaki, Kamakura",
+    "caption_en": "Inamuragasaki at blue hour",
+    "caption_ja": "ブルーアワーの稲村ヶ崎",
+    "photographer": "taro ohtani",
+    "source": "https://unsplash.com/photos/a-red-traffic-light-sitting-on-the-side-of-a-road-JXgXZ26qtnM",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/biei-lone-tree-snow.jpg",
+    "use": "postcard",
+    "place": "Biei, Hokkaido",
+    "caption_en": "A lone tree in the snow, Biei",
+    "caption_ja": "雪原の一本木、美瑛",
+    "photographer": "Sung Jin Cho",
+    "source": "https://unsplash.com/photos/a-lone-tree-stands-alone-in-a-snowy-field-HxCLaUP2Itk",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/shirakawago-snow-village.jpg",
+    "use": "postcard",
+    "place": "Shirakawa-gō, Gifu",
+    "caption_en": "Shirakawa-gō under snow",
+    "caption_ja": "雪の白川郷",
+    "photographer": "Hyungman Jeon",
+    "source": "https://unsplash.com/photos/a-snow-covered-village-in-the-middle-of-a-forest-8nM5OvAtP4k",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/hakone-lake-ashi-mist.jpg",
+    "use": "postcard",
+    "place": "Lake Ashi, Hakone",
+    "caption_en": "Mist over Lake Ashi",
+    "caption_ja": "霧の芦ノ湖",
+    "photographer": "Joanna Liu",
+    "source": "https://unsplash.com/photos/body-of-water-beside-island-T-7Crzd6_H8",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/onomichi-channel-haze.jpg",
+    "use": "postcard",
+    "place": "Onomichi, Hiroshima",
+    "caption_en": "The Onomichi channel in haze",
+    "caption_ja": "霞む尾道水道",
+    "photographer": "ganma",
+    "source": "https://unsplash.com/photos/body-of-water-beside-buildings-during-daytime-FiAlZ5OJb40",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/miyajima-torii-low-tide.jpg",
+    "use": "postcard",
+    "place": "Miyajima, Hiroshima",
+    "caption_en": "The torii of Itsukushima at low tide",
+    "caption_ja": "宮島、海に立つ鳥居",
+    "photographer": "WANG Tianfang",
+    "source": "https://unsplash.com/photos/a-large-body-of-water-with-a-large-structure-in-the-middle-of-it-7k5PgbasPew",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/kawaguchiko-islet-mist.jpg",
+    "use": "postcard",
+    "place": "Lake Kawaguchi, Yamanashi",
+    "caption_en": "An islet on Lake Kawaguchi in morning mist",
+    "caption_ja": "朝霧の河口湖",
+    "photographer": "C. Stone",
+    "source": "https://unsplash.com/photos/body-of-water-yORItUTVwtE",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/arashiyama-togetsukyo-snow.jpg",
+    "use": "postcard",
+    "place": "Arashiyama, Kyoto",
+    "caption_en": "Togetsukyō bridge in snow",
+    "caption_ja": "雪の渡月橋",
+    "photographer": "Duong Thinh",
+    "source": "https://unsplash.com/photos/a-bridge-over-a-body-of-water-with-a-mountain-in-the-background-vc_2XePd3XE",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/mount-fuji-fisherman.jpg",
+    "use": "postcard",
+    "place": "Mount Fuji",
+    "caption_en": "Mount Fuji and a fishing boat",
+    "caption_ja": "富士と釣り舟",
+    "photographer": "Gregoire Jeanneau",
+    "source": "https://unsplash.com/photos/boat-on-calm-body-of-water-during-daytime-l8oi3wSXj4E",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  },
+  {
+    "file": "photos/tokyo-shinjuku-haze.jpg",
+    "use": "postcard",
+    "place": "Shinjuku, Tokyo",
+    "caption_en": "Shinjuku in a blue haze",
+    "caption_ja": "霞む新宿",
+    "photographer": "Tokyo Kohaku",
+    "source": "https://unsplash.com/photos/a-view-of-a-city-with-tall-buildings-uBgU1v1fffw",
+    "license": "Unsplash License",
+    "aspect": "148:105"
+  }
+]

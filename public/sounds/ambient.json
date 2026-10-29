@@ -1,0 +1,47 @@
+{
+ "about": "The room's ambience for src/sound/ambient.ts, made by scripts/sounds/ambient.ts from ElevenLabs takes (eleven_text_to_sound_v2): the bed loops with crossfades, the birds are dropped in now and then. gainDb is the playback trim.",
+ "bed": {
+  "file": "ambient-leaves.m4a",
+  "gainDb": -8.85,
+  "duration": 24.4,
+  "bytes": 347048,
+  "src": "leaves-2.mp3 0-24.4 s"
+ },
+ "birds": [
+  {
+   "file": "ambient-bird-1.m4a",
+   "gainDb": 1.95,
+   "duration": 2.9,
+   "bytes": 26005,
+   "src": "birds-2.mp3 0.55-3.45 s"
+  },
+  {
+   "file": "ambient-bird-2.m4a",
+   "gainDb": 2.55,
+   "duration": 2.45,
+   "bytes": 21429,
+   "src": "birds-2.mp3 5.45-7.9 s"
+  },
+  {
+   "file": "ambient-bird-3.m4a",
+   "gainDb": 0.75,
+   "duration": 2,
+   "bytes": 18486,
+   "src": "birds-2.mp3 10.4-12.4 s"
+  },
+  {
+   "file": "ambient-bird-4.m4a",
+   "gainDb": 1.85,
+   "duration": 2.3,
+   "bytes": 20682,
+   "src": "birds-2.mp3 13.9-16.2 s"
+  },
+  {
+   "file": "ambient-bird-5.m4a",
+   "gainDb": 2.75,
+   "duration": 3.6,
+   "bytes": 31426,
+   "src": "birds-2.mp3 21.5-25.1 s"
+  }
+ ]
+}

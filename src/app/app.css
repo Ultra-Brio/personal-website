@@ -1,0 +1,430 @@
+/*
+ * sasshi, the page around the booklets: 朝の光 (morning light). A pale blue-grey room at six in the morning, low sun through
+ * a window at the top right; the booklet lies in the light, the words sit in the shade at the left, set like the front matter of a
+ * Japanese book. Light only. Tokens (§1.2), the room (§1.4), the grid (§1.5, numbers from layout.ts on <html>), the words column,
+ * the hashira, the hands row, the phone, landscape and tablet layouts, the Profile sheet, tooltips.
+ * The detail view and the objects are in detail.css, the text version (and the DOM résumé) in letter.css. Hand-formatted.
+ */
+@import "./detail.css";
+@import "./letter.css";
+
+/* ------------------------------------------------------------------ tokens (§1.2) */
+:root {
+  color-scheme: light;
+  --asagiri: #e3e8eb;   /* 朝霧 the desk */
+  --hakuji: #eef2f4;    /* 白磁 raised surfaces */
+  --gofun: #f8f9f7;     /* 胡粉 DOM paper */
+  --sumi: #1c232b;      /* 墨 names, active, values */
+  --tetsu: #36424e;     /* 鉄鼠 body text */
+  --ainezu: #4f5d69;    /* 藍鼠 labels, counts, hints */
+  --shironezu: #c2cbd2; /* 白鼠 hairlines (decoration) */
+  --usuzumi: #8e9aa4;   /* 薄墨 leader dots, disabled arrows (never meaningful text) */
+  --ai: #2f4f73;        /* 藍 the one accent */
+  --pen: #24324a;       /* handwriting */
+  --sh: 21 35 58;       /* shadow ink */
+
+  --shadow-paper: 0 1px 1px rgb(var(--sh) / .08), 0 6px 12px rgb(var(--sh) / .10), 0 30px 50px -14px rgb(var(--sh) / .32);
+  --shadow-snap: drop-shadow(0 1px 1px rgb(var(--sh) / .10)) drop-shadow(0 16px 22px rgb(var(--sh) / .16));
+  --shadow-glass: inset 0 1px 0 rgb(255 255 255 / .92), inset 0 -1px 0 rgb(var(--sh) / .06), 0 0 0 .5px rgb(var(--sh) / .16), 0 14px 30px -10px rgb(var(--sh) / .22);
+  --shadow-swatch: inset 0 0 0 .5px rgb(var(--sh) / .25), 0 1px 2px rgb(var(--sh) / .12);
+  --glass: linear-gradient(180deg, rgb(255 255 255 / .64), rgb(244 247 249 / .44));
+
+  /* the faces: src/app/fonts.ts writes the profile's stacks over these (Latin always from the Japanese faces) */
+  --mincho: "Folio Serif Latin", "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Songti SC", serif;
+  --gothic: "Folio Sans Latin", "Zen Kaku Gothic New", "Hiragino Sans", "PingFang SC", sans-serif;
+  --hand: "Folio Hand Latin", "Klee One", "Hiragino Maru Gothic ProN", cursive;
+  /* the sans weights (fonts.ts writes the profile's from src/fonts cssWeight) */
+  --gw4: 400;
+  --gw5: 500;
+
+  --ease: cubic-bezier(.22, .61, .36, 1);
+  --ease-io: cubic-bezier(.65, .05, .36, 1);
+
+  /* the grid; layout.ts writes the live values (--m, --g, --col, --box-*) on <html> */
+  --m: 48px;
+  --g: 24px;
+  --col: 90px;
+  --words: 204px;
+  /* the desk's scale (layout.ts scaleOf: 1 while K_MAX is 1) and one scaled px; where a very wide desk's composition starts. A desk's
+     type, rows and controls are set in --u, so raising K_MAX grows them as one */
+  --k: 1;
+  --u: calc(var(--k) * 1px);
+  --x0: 0px;
+  --row: calc(40 * var(--u));
+  --box-l: 390px;
+  --box-t: 48px;
+  --box-r: 1392px;
+  --box-b: 788px;
+  --box-w: 1002px;
+  --box-h: 740px;
+  --wide-l: 300px;
+
+  --tooth: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/></svg>");
+}
+/*
+ * An element holding text in another Han language sets its own stacks (fonts.ts textProps). The sans weights are the Latin alias's
+ * files (400 / 500) in every language: src/fonts registers each Chinese face from one file weight that answers them all (cssWeight).
+ */
+[data-han="ja"] { --mincho: var(--mincho-ja); --gothic: var(--gothic-ja); --hand: var(--hand-ja); }
+[data-han="zh-Hans"] { --mincho: var(--mincho-zh-Hans); --gothic: var(--gothic-zh-Hans); --hand: var(--hand-zh-Hans); }
+[data-han="zh-Hant"] { --mincho: var(--mincho-zh-Hant); --gothic: var(--gothic-zh-Hant); --hand: var(--hand-zh-Hant); }
+
+/* ------------------------------------------------------------------ base */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { height: 100%; background: var(--asagiri); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { min-height: 100%; background: var(--asagiri); color: var(--tetsu); font: var(--gw4) 13px/20px var(--gothic); font-feature-settings: "palt" 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+body:has(.page[data-view="folio"]) { overflow: hidden; overscroll-behavior: none; }
+#root { min-height: 100%; }
+::selection { background: rgb(47 79 115 / .18); color: var(--sumi); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; letter-spacing: inherit; text-align: inherit; -webkit-tap-highlight-color: transparent; }
+img, svg, canvas { display: block; }
+ul, ol { list-style: none; padding: 0; }
+dd { margin: 0; }
+h1, h2, h3, h4 { font: inherit; }
+:focus-visible { outline: 2px solid var(--ai); outline-offset: 3px; border-radius: 4px; }
+:focus:not(:focus-visible) { outline: none; }
+[hidden] { display: none !important; }
+/* the readable twin of the stages is never seen: it must not pull a web font slice for its CJK words */
+#profile-text { font-family: system-ui, sans-serif; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+.skip { position: fixed; z-index: 40; left: calc(var(--x0) + var(--m)); top: -80px; padding: calc(6 * var(--u)) calc(10 * var(--u)); border-radius: 6px; background: var(--glass), var(--hakuji); box-shadow: var(--shadow-glass); color: var(--sumi); font: var(--gw5) calc(12.5 * var(--u))/calc(20 * var(--u)) var(--gothic); transition: top .18s var(--ease); }
+.skip:focus { top: 12px; }
+.go { color: var(--ainezu); font: var(--gw4) calc(11 * var(--u))/calc(20 * var(--u)) var(--gothic); }
+/* the copied mark: a 4 px 藍 disc before "Copied" */
+.cdot { display: inline-block; width: calc(4 * var(--u)); height: calc(4 * var(--u)); margin: 0 calc(6 * var(--u)) calc(2 * var(--u)) 0; border-radius: 50%; background: var(--ai); vertical-align: middle; }
+time, .n, .ct, .yr, .cap-count, .tk-day { font-variant-numeric: tabular-nums; }
+
+/* links have no underline at rest; hover turns them 藍 with a hairline underline (§1.6.14) */
+@media (hover: hover) and (pointer: fine) {
+  .oku a.v:hover, .lang-a:not([aria-current]):hover, .cap-links a:hover, .lt-v a:hover, .back:hover, .pw:hover, .tl:hover, .lb-act-rows a:hover, .lt-w:hover, .copy:hover, .hex:hover { color: var(--ai); text-decoration: underline 1px rgb(47 79 115 / .4); text-underline-offset: 3px; }
+}
+
+/* ------------------------------------------------------------------ the room (§1.4, r3 D2): one fixed layer UNDER the canvas, painted once */
+/* nothing above the canvas, no animation: the window light on the 3D desk is the engine's (Room.tsx). The blend modes stay inside
+   the desk (contain: strict isolates it), so they are worked out once, when it is painted */
+.room { display: contents; }
+.desk { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: url("/photos/home-bg.jpg") center / cover no-repeat, var(--asagiri); contain: strict; }
+.desk > svg, .desk > .falloff, .desk > .tooth { position: absolute; inset: 0; width: 100%; height: 100%; }
+.desk .fl { position: absolute; inset: -50%; background-repeat: repeat; }
+/* washi fibres (A's recipe): white flecks and strands, one faint dark fleck */
+.fl-a { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='f' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='turbulence' baseFrequency='0.006 0.03' numOctaves='4' seed='5' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -14 0 0 0 1.3'/></filter><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>"); background-size: 600px; opacity: .10; transform: rotate(30deg); }
+.fl-b { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='560' height='560'><filter id='f' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='turbulence' baseFrequency='0.007 0.028' numOctaves='4' seed='13' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -14 0 0 0 1.3'/></filter><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>"); background-size: 560px; opacity: .08; transform: rotate(-38deg); }
+.fl-c { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='f' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='turbulence' baseFrequency='0.006 0.03' numOctaves='4' seed='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 .45  0 0 0 0 .5  0 0 0 0 .53  -14 0 0 0 1.3'/></filter><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>"); background-size: 600px; opacity: .04; transform: rotate(-50deg); }
+.fl-s { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='f' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='turbulence' baseFrequency='0.004 0.045' numOctaves='3' seed='8' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -9 0 0 0 1.25'/></filter><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>"); background-size: 600px; opacity: .06; transform: rotate(-64deg); }
+@media (pointer: coarse) { .fl-b, .fl-c { display: none; } }
+.falloff { background: radial-gradient(150% 130% at 96% 0%, transparent 42%, rgb(196 207 217 / .36) 100%); mix-blend-mode: multiply; }
+/* 照片背景上的纸色纱幕：左栏文字落在「纸」上，向右渐隐露出照片 */
+.desk::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg,
+    rgb(227 232 235 / .92) 0%,
+    rgb(227 232 235 / .72) 22%,
+    rgb(227 232 235 / .28) 46%,
+    rgb(227 232 235 / 0) 64%);
+}
+.sun, .lift { opacity: var(--day, 1); }
+.sun { mix-blend-mode: multiply; }
+.lift { mix-blend-mode: color-dodge; }
+/* the light rises with the daybreak: while it does it has layers of its own, so only their opacity changes (no repaint) */
+.room:not([data-lit]) :is(.sun, .lift, .cast) { will-change: opacity; }
+.tooth { background-image: var(--tooth); background-size: 240px; mix-blend-mode: multiply; opacity: .07; }
+/* the still window bar and twig of the fallback desk: never on words (masked off the outer margin, the hands row and, on phones,
+   the header and the foot) */
+.cast { mix-blend-mode: multiply; opacity: calc(.2 * var(--day, 1));
+  -webkit-mask-image: linear-gradient(to left, transparent var(--m), #000 calc(2 * var(--m))), linear-gradient(to top, transparent calc(var(--m) + var(--row) + 4px), #000 calc(var(--m) + var(--row) + 28px));
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(to left, transparent var(--m), #000 calc(2 * var(--m))), linear-gradient(to top, transparent calc(var(--m) + var(--row) + 4px), #000 calc(var(--m) + var(--row) + 28px)); mask-composite: intersect; }
+@media (pointer: coarse) { .cast { opacity: calc(.14 * var(--day, 1)); } }
+
+/* ------------------------------------------------------------------ the stage: the canvas fills the viewport, the book box is only ever camera insets */
+.page { position: relative; min-height: 100vh; min-height: 100dvh; }
+.stage {
+  position: fixed; inset: 0; z-index: 1; outline: none;
+  /* the 3D books (src/book) read these: the canvas clears transparent, the frosted case sees the desk colour behind it */
+  --folio-bg: #e3e8eb; --folio-raised: var(--hakuji); --folio-ink: var(--sumi); --folio-ink-2: var(--tetsu); --folio-ink-3: var(--ainezu);
+  --folio-line: var(--shironezu); --folio-hover: rgb(28 35 43 / .07); --folio-accent: var(--ai); --folio-font: var(--gothic); --folio-ease: var(--ease);
+  --folio-font-serif: var(--mincho); --folio-font-mono: var(--gothic);
+}
+.stage .folio-book:focus-visible { outline: none; }
+.stage .folio-book:focus-visible::after { content: ""; position: fixed; left: calc(var(--box-l) - 6px); top: calc(var(--box-t) - 6px); width: calc(var(--box-w) + 12px); height: calc(var(--box-h) + 12px); border-radius: 6px; outline: 2px solid var(--ai); pointer-events: none; }
+/* the albums reach into the 間 column (layout.ts wide): so does their ring */
+.stage-book:not([data-stage="resume"]) .folio-book[data-mode="3d"]:focus-visible::after { left: calc(var(--wide-l) - 6px); width: calc(var(--box-r) - var(--wide-l) + 12px); }
+.panel { position: absolute; inset: 0; outline: none; }
+/* the printed version in the book box (no WebGL, a stage that failed): it scrolls there, the rest of the page stays */
+.panel[data-fallback] { left: var(--box-l); top: var(--box-t); width: var(--box-w); height: var(--box-h); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.stage-host, .stage-book { position: absolute; inset: 0; }
+/* the flat book (no WebGL) lies in the book box */
+.stage-host:has(.folio-book[data-mode="flat"]) { left: var(--box-l); top: var(--box-t); width: var(--box-w); height: var(--box-h); right: auto; bottom: auto; }
+/* daybreak: the booklet comes up last, out of a 6 px blur (§1.6.13) */
+.stage-host .folio-book { transition: opacity .7s var(--ease), filter .7s var(--ease); }
+.stage-host:not([data-ready]) .folio-book { opacity: 0; filter: blur(6px); transition-duration: .2s; }
+/* a booklet switch: the one on the desk fades out with a 4 px blur, then the next comes up */
+.panel[data-leaving] .stage-host { opacity: 0; filter: blur(4px); transition: opacity .24s var(--ease), filter .24s var(--ease); }
+/* the book's own DOM chrome is never shown: the page's printed words drive it */
+.stage .folio-foot, .stage .folio-nav, .stage .folio-loading { display: none !important; }
+/* detail views: the room behind the veil goes soft and the book half fades, so no dark spine or object reads through the veil */
+/* (on the canvas's box: the engine owns the canvas's own inline opacity) */
+.stage .folio-stage { transition: filter .3s var(--ease), opacity .3s var(--ease); }
+/* Closing (Modal: the dialog's data-closing) lifts all of this at once: the room comes back while the veil goes, in the same 300 ms,
+   with no blurred, wordless beat between the veil fading and the page returning; when the dialog then closes and data-detail goes,
+   nothing is left to change */
+:root:not(:has(dialog.lb[data-closing])) .page[data-detail] .stage .folio-stage { filter: blur(10px); opacity: .36; }
+
+/* keyboard path to the pouch objects: invisible until focused, then a glass list in the book box's corner */
+.pouch-index { position: fixed; z-index: 7; top: calc(var(--box-t) + 8px); left: calc(var(--box-l) + 8px); }
+.pouch-index:not(:focus-within) { width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.pouch-index:focus-within ol { display: grid; min-width: 220px; padding: 6px; border-radius: 10px; background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15); box-shadow: var(--shadow-glass); }
+.pouch-index button { display: flex; align-items: baseline; gap: 12px; width: 100%; padding: 6px 10px; border-radius: 6px; font: var(--gw5) 12.5px/20px var(--gothic); color: var(--sumi); }
+.pouch-index button .n { color: var(--ainezu); }
+.pouch-index button:hover, .pouch-index button:focus-visible { color: var(--ai); }
+.pouch-index button:focus-visible { outline-offset: -2px; }
+
+/* glass tooltips, fine pointers only (§1.6.14) */
+.tip { position: fixed; z-index: 60; left: 0; top: 0; translate: -50% -100%; padding: calc(6 * var(--u)) calc(10 * var(--u)); border-radius: 6px; background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15); box-shadow: var(--shadow-glass); color: var(--sumi); font: var(--gw5) calc(11.5 * var(--u))/calc(16 * var(--u)) var(--gothic); letter-spacing: .04em; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .18s var(--ease); }
+.tip.tip-at { translate: 0 -100%; }
+.tip[data-show] { opacity: 1; }
+
+/* ------------------------------------------------------------------ the words column (§1.6): 204 px at the left margin, in the shade */
+.words { position: fixed; z-index: 5; left: calc(var(--x0) + var(--m)); top: var(--m); bottom: var(--m); width: calc(var(--words) * var(--k)); display: flex; flex-direction: column; transition: opacity .3s var(--ease); }
+:root:not(:has(dialog.lb[data-closing])) .page[data-detail] :is(.words, .hands, .hint), :root:not(:has(dialog.lb[data-closing])) .page[data-detail] > .hashira { opacity: 0; visibility: hidden; transition: opacity .3s var(--ease), visibility 0s linear .3s; }
+
+/* 名 identity */
+.id { display: grid; grid-template-columns: 1fr; align-items: start; }
+.id[data-plate] { grid-template-columns: auto 1fr; column-gap: calc(14 * var(--u)); }
+.nameplate { writing-mode: vertical-rl; font: 500 calc(22 * var(--u))/1 var(--mincho); letter-spacing: .2em; color: var(--sumi); padding-top: calc(3 * var(--u)); }
+.id-text { min-width: 0; }
+.id-name { display: block; font: 500 calc(22 * var(--u))/calc(28 * var(--u)) var(--mincho); letter-spacing: .01em; color: var(--sumi); text-align: left; }
+.id-role { font: var(--gw4) calc(13 * var(--u))/calc(20 * var(--u)) var(--gothic); color: var(--tetsu); }
+.id-where { font: var(--gw4) calc(12 * var(--u))/calc(20 * var(--u)) var(--gothic); color: var(--ainezu); letter-spacing: .02em; }
+.id-where time { font-weight: var(--gw5); color: var(--tetsu); }
+button.id-name, button.nameplate { cursor: pointer; text-align: start; }
+/* a name written in Han with no separate local name (a Chinese profile's 林文): the name itself is the vertical plate, the role
+   and the place stand beside it as they do beside an English name */
+.nameplate.is-name { padding-top: 0; }
+
+/* the front matter keeps its lines on a desk: the identity block and a 5-line bio, so 目次 starts at the same y in every language */
+:root[data-layout="d"] .words > .id, :root[data-layout="s"] .words > .id { min-height: calc(68 * var(--u)); }
+:root[data-layout="d"] .words > .jo, :root[data-layout="s"] .words > .jo { flex: none; height: calc(120 * var(--u)); padding-bottom: 0; -webkit-line-clamp: 5; }
+
+/* 序 the bio */
+.jo { margin-top: calc(40 * var(--u)); font: 400 calc(14 * var(--u))/calc(24 * var(--u)) var(--mincho); letter-spacing: .015em; color: var(--tetsu); text-wrap: pretty; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; padding-bottom: calc(2 * var(--u)); }
+
+/* 目次 the booklets: name, leader, count; the active row has a 藍 disc that slides between rows */
+.toc { position: relative; margin-top: calc(40 * var(--u)); --rh: calc(36 * var(--u)); }
+.toc ol { display: grid; }
+.toc a { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; height: var(--rh); color: var(--ainezu); transition: color .18s var(--ease); }
+.toc a::after { content: ""; position: absolute; inset: 0 calc(-8 * var(--u)); }
+.toc .nm { font: 400 calc(20 * var(--u))/var(--rh) var(--mincho); letter-spacing: .01em; white-space: nowrap; }
+.toc .lead { align-self: end; height: 1px; margin: 0 calc(10 * var(--u)) calc(12 * var(--u)); background-image: radial-gradient(circle, var(--usuzumi) .6px, transparent .9px); background-size: calc(5 * var(--u)) 1px; background-repeat: repeat-x; opacity: .8; }
+.toc .n { font: var(--gw5) calc(12 * var(--u))/var(--rh) var(--gothic); letter-spacing: .04em; color: var(--ainezu); }
+.toc a[aria-current="page"] { color: var(--sumi); }
+.toc a[aria-current="page"] .lead { background: var(--sumi); opacity: .5; }
+.toc a[aria-current="page"] .n { color: var(--sumi); }
+.toc-disc { position: absolute; left: calc(-16 * var(--u)); top: 0; width: calc(5 * var(--u)); height: calc(5 * var(--u)); border-radius: 50%; background: var(--ai); transform: translateY(calc(var(--i) * var(--rh) + var(--rh) / 2 - 1.5 * var(--u))); transition: transform .36s var(--ease); }
+@media (hover: hover) and (pointer: fine) { .toc a:hover { color: var(--sumi); } .toc a:hover .n { color: var(--sumi); } }
+
+/* the handling line, cross-faded */
+.xf { display: grid; }
+.xf-i { grid-area: 1 / 1; animation: xf-in .36s var(--ease) both; }
+.xf-i[data-out] { animation: xf-out .36s var(--ease) both; pointer-events: none; }
+@keyframes xf-in { from { opacity: 0; } }
+@keyframes xf-out { to { opacity: 0; } }
+.handling { margin-top: calc(20 * var(--u)); }
+.handling .xf-i { animation-duration: .3s; }
+/* tetsu, not ainezu: the line sits in the falloff's darkest corner (≥ 6.8:1 there) */
+.handling p { font: var(--gw4) calc(12.5 * var(--u))/calc(21 * var(--u)) var(--gothic); color: var(--tetsu); text-wrap: pretty; }
+.tl { color: var(--sumi); }
+
+/* 奥付 the colophon (§1.6.5, F2): explicit 20 px line boxes, nothing clipped, nothing truncated */
+.foot { margin-top: auto; padding-top: calc(20 * var(--u)); }
+.oku dl { display: grid; padding: calc(6 * var(--u)) 0; border-top: 1px solid var(--shironezu); border-bottom: 1px solid var(--shironezu); }
+.oku .row { display: grid; grid-template-columns: calc(64 * var(--u)) minmax(0, 1fr) calc(14 * var(--u)); align-items: center; min-height: calc(28 * var(--u)); }
+.oku dt { font: var(--gw5) calc(11.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .06em; color: var(--ainezu); padding-block: calc(4 * var(--u)); white-space: nowrap; }
+.oku dd { min-width: 0; padding-block: calc(4 * var(--u)); font: var(--gw4) calc(12.5 * var(--u))/calc(20 * var(--u)) var(--gothic); color: var(--sumi); white-space: nowrap; overflow: visible; }
+.oku .v { display: inline-block; font: inherit; line-height: calc(20 * var(--u)); color: var(--sumi); white-space: nowrap; transition: color .18s var(--ease); }
+.oku .go { justify-self: end; }
+/* a value wider than its cell: the label column drops (never an ellipsis) */
+.oku .row[data-drop] { grid-template-columns: minmax(0, 1fr) calc(14 * var(--u)); }
+.oku .row[data-drop] dt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.prefs { display: flex; align-items: center; gap: calc(28 * var(--u)); height: var(--row); }
+.pw { position: relative; display: inline-flex; align-items: baseline; gap: calc(4 * var(--u)); font: var(--gw5) calc(11.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .06em; color: var(--ainezu); white-space: nowrap; }
+.pw::after { content: ""; position: absolute; inset: calc(-10 * var(--u)) calc(-6 * var(--u)); }
+.pw b { font-weight: var(--gw5); color: var(--sumi); }
+.pw .go { font-size: calc(11 * var(--u)); }
+/* the language switch (brief r4 E1): English · 中文, printed like the prefs; the language on view in ink, the other muted. On a desk
+   it stands on its own line over Sound and Text version (the three do not fit the column's 204 px in one) */
+.lang { display: flex; align-items: baseline; gap: calc(7 * var(--u)); font: var(--gw5) calc(11.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .06em; color: var(--ainezu); white-space: nowrap; }
+.lang-a { position: relative; color: var(--ainezu); transition: color .18s var(--ease); }
+.lang-a::after { content: ""; position: absolute; inset: calc(-10 * var(--u)) calc(-4 * var(--u)); }
+.lang-a[aria-current] { color: var(--sumi); cursor: default; }
+.lang-dot { font-style: normal; color: var(--usuzumi); }
+.foot > .lang { margin-top: calc(12 * var(--u)); }
+/* a switch of language (App useLanguage): the words that change step out, and the new ones step in at once, as an animation the
+   compositor runs (a busy main thread cannot hold the desk wordless). What reads the same in both stays: the switch itself, the
+   counts and leaders, the colophon's values, the swatches, the arrows and the pager, the hairlines. The hashira cross-fades on its
+   own (Shell CrossFade) */
+.page[data-lang-out] :is(.words > .id, .words > .jo, .toc .nm, .handling, .oku dt, .prefs, .case-l, .cs-t, .ctl > .w:not(.ar), .pf-t, .hint, .panel[data-fallback], .sheetwrap, .page > .back) { opacity: 0; transition: opacity .16s var(--ease-io); }
+.page[data-lang-in] :is(.words > .id, .words > .jo, .toc .nm, .handling, .oku dt, .prefs, .case-l, .cs-t, .ctl > .w:not(.ar), .pf-t, .hint, .panel[data-fallback], .sheetwrap, .page > .back) { transition: none; animation: lang-in .18s var(--ease) both; }
+@keyframes lang-in { from { opacity: 0; } }
+.sheetwrap, .page > .back { transition: opacity .3s var(--ease); }
+
+/* 柱 the hashira: a vertical running title in the outer margin */
+.hashira { position: fixed; z-index: 5; top: var(--m); left: calc(var(--box-r) + var(--m) / 2 - 7 * var(--u)); writing-mode: vertical-rl; transition: opacity .3s var(--ease); }
+.hashira .xf-i { animation-name: hs-in; }
+.hashira .xf-i[data-out] { animation-name: hs-out; }
+@keyframes hs-in { from { opacity: 0; transform: translateY(-6px); } }
+@keyframes hs-out { to { opacity: 0; transform: translateY(6px); } }
+.hs { display: flex; align-items: center; gap: calc(14 * var(--u)); }
+.hashira .jp { font: 500 calc(14 * var(--u))/calc(14 * var(--u)) var(--mincho); letter-spacing: .42em; color: var(--sumi); }
+.hashira .rule { display: block; width: 1px; height: calc(28 * var(--u)); background: var(--shironezu); }
+.hashira .en { font: var(--gw5) calc(11 * var(--u))/calc(14 * var(--u)) var(--gothic); letter-spacing: .14em; color: var(--ainezu); white-space: nowrap; }
+
+/* ------------------------------------------------------------------ the hands row: under the book box, on the page's bottom line */
+.hands { position: fixed; z-index: 6; left: var(--box-l); width: var(--box-w); bottom: var(--m); height: var(--row); display: flex; align-items: center; justify-content: space-between; gap: calc(24 * var(--u)); transition: opacity .3s var(--ease); }
+.hands .case, .hands .ctl { opacity: 0; transition: opacity .7s var(--ease); }
+.hands[data-show] .case, .hands[data-show] .ctl { opacity: 1; }
+.page:not([data-loading]) .hands .case { opacity: 1; }
+
+/* the case switch (§1.6.7) */
+.case { display: flex; align-items: center; gap: calc(20 * var(--u)); }
+.case-l { font: var(--gw5) calc(11.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .06em; color: var(--ainezu); margin-right: calc(2 * var(--u)); }
+.cs { position: relative; display: inline-flex; align-items: center; gap: calc(8 * var(--u)); height: calc(40 * var(--u)); font: var(--gw5) calc(11.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .06em; color: var(--ainezu); white-space: nowrap; transition: color .18s var(--ease); }
+.cs[aria-checked="true"] { color: var(--sumi); }
+@media (hover: hover) and (pointer: fine) { .cs:hover { color: var(--ai); } }
+.sw { position: relative; flex: none; width: calc(18 * var(--u)); height: calc(18 * var(--u)); border-radius: calc(4 * var(--u)); overflow: hidden; box-shadow: var(--shadow-swatch); }
+.cs[aria-checked="true"] .sw { outline: 1px solid var(--sumi); outline-offset: calc(2 * var(--u)); overflow: visible; }
+.sw-frost { background: linear-gradient(160deg, rgb(255 255 255 / .85), rgb(255 255 255 / .45) 55%, rgb(255 255 255 / .7)), var(--f); }
+.sw-frost::after { content: ""; position: absolute; left: calc(4 * var(--u)); top: calc(5 * var(--u)); width: calc(9 * var(--u)); height: calc(7 * var(--u)); background: var(--c); opacity: .4; filter: blur(calc(1.5 * var(--u))); }
+.sw-cloth { background: repeating-linear-gradient(0deg, rgb(255 255 255 / .09) 0 .5px, transparent .5px 1.5px), repeating-linear-gradient(90deg, rgb(0 0 0 / .1) 0 .5px, transparent .5px 1.5px), linear-gradient(160deg, rgb(255 255 255 / .1), rgb(0 0 0 / .14)), var(--c); }
+.sw-leather { background: radial-gradient(circle at 30% 25%, rgb(255 255 255 / .25), transparent 60%), var(--c); box-shadow: inset 0 -2px 3px rgb(0 0 0 / .25), inset 0 0 0 .5px rgb(0 0 0 / .3), 0 1px 2px rgb(var(--sh) / .15); }
+
+/* the controls: printed words, no container (§1.6.8, F1) */
+.ctl { display: flex; align-items: center; justify-content: flex-end; min-width: 0; }
+.w { position: relative; display: inline-flex; align-items: center; height: calc(40 * var(--u)); padding: 0 calc(10 * var(--u)); font: var(--gw5) calc(12.5 * var(--u))/calc(40 * var(--u)) var(--gothic); letter-spacing: .05em; color: var(--sumi); white-space: nowrap; transition: color .18s var(--ease), opacity .12s var(--ease); }
+.w::after { content: ""; position: absolute; inset: calc(-4 * var(--u)) calc(-6 * var(--u)); }
+.ctl > .w:last-child, .ctl > .cg:last-child > .w:last-child { padding-right: 0; }
+.w:active:not([aria-disabled]) { opacity: .6; }
+.w[aria-disabled] { color: var(--usuzumi); cursor: default; }
+@media (hover: hover) and (pointer: fine) { .w:not([aria-disabled]):hover { color: var(--ai); text-decoration: underline 1px rgb(47 79 115 / .4); text-underline-offset: 4px; } }
+.w.ar { font: 400 calc(17 * var(--u))/calc(40 * var(--u)) var(--mincho); padding: 0 calc(10 * var(--u)) calc(2 * var(--u)); }
+.ct { min-width: calc(52 * var(--u)); text-align: center; font: var(--gw5) calc(12.5 * var(--u))/calc(40 * var(--u)) var(--gothic); letter-spacing: .05em; color: var(--ainezu); white-space: nowrap; }
+.sep { flex: none; width: 1px; height: calc(14 * var(--u)); margin: 0 calc(4 * var(--u)); background: var(--shironezu); }
+.led { display: inline-block; width: calc(7 * var(--u)); height: calc(7 * var(--u)); margin-right: calc(8 * var(--u)); border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ai); transition: background .18s var(--ease); }
+.led[data-on] { background: var(--ai); }
+
+/* the daybreak line in the book box centre (§1.6.13) */
+.dawn { position: fixed; z-index: 5; left: calc(var(--box-l) + var(--box-w) / 2); top: calc(var(--box-t) + var(--box-h) / 2); translate: -50% -50%; display: flex; flex-direction: column; align-items: center; gap: calc(14 * var(--u)); font: var(--gw4) calc(12.5 * var(--u))/calc(18 * var(--u)) var(--gothic); letter-spacing: .04em; color: var(--ainezu); white-space: nowrap; animation: xf-in .36s var(--ease) both; }
+.dawn i { width: calc(120 * var(--u)); height: 1px; background: linear-gradient(90deg, var(--ai) 0 calc(var(--p) * 100%), var(--shironezu) 0); }
+
+/* phone hint, the Profile word (hidden on a desk) */
+.hint { display: none; transition: opacity .3s var(--ease); }
+.pf { display: none; }
+
+/* ------------------------------------------------------------------ desktop, short (height ≤ 800): no handling line */
+@media (max-height: 800px) { :root[data-layout="d"] .handling, :root[data-layout="s"] .handling { display: none; } }
+@media (max-height: 700px) { :root[data-layout="d"] .words > .jo, :root[data-layout="s"] .words > .jo { -webkit-line-clamp: 3; height: 72px; } :root[data-layout="d"] .jo, :root[data-layout="s"] .jo, :root[data-layout="d"] .toc, :root[data-layout="s"] .toc { margin-top: 28px; } }
+
+/* ------------------------------------------------------------------ phones and the tablet: a header, the book box, a hint, the bottom row */
+:root[data-layout="p"], :root[data-layout="t"] { --row: 44px; }
+:root[data-layout="p"] .words, :root[data-layout="t"] .words { left: calc(var(--m) + env(safe-area-inset-left, 0px)); right: calc(var(--m) + env(safe-area-inset-right, 0px)); top: calc(var(--m) + env(safe-area-inset-top, 0px)); bottom: auto; width: auto; padding-right: 40px; }
+:root[data-layout="p"] .id[data-plate], :root[data-layout="t"] .id[data-plate] { column-gap: 10px; }
+:root[data-layout="p"] .nameplate, :root[data-layout="t"] .nameplate { font-size: 17px; letter-spacing: .16em; }
+:root[data-layout="p"] .id-name, :root[data-layout="t"] .id-name { font-size: 17px; line-height: 22px; }
+:root[data-layout="p"] .id-role, :root[data-layout="t"] .id-role { font-size: 12px; line-height: 18px; }
+:root[data-layout="p"] .id-where, :root[data-layout="t"] .id-where { display: none; }
+:root[data-layout="t"] .jo { order: 3; margin-top: 12px; font-size: 14px; line-height: 23px; -webkit-line-clamp: 2; max-width: 560px; }
+:root[data-layout="p"] .toc, :root[data-layout="t"] .toc { margin-top: 20px; }
+:root[data-layout="p"] .toc ol, :root[data-layout="t"] .toc ol { grid-auto-flow: column; justify-content: start; gap: 24px; }
+:root[data-layout="p"] .toc a, :root[data-layout="t"] .toc a { display: inline-flex; align-items: baseline; gap: 5px; height: 32px; }
+:root[data-layout="p"] .toc a::after, :root[data-layout="t"] .toc a::after { inset: -6px -8px; }
+:root[data-layout="p"] .toc .nm, :root[data-layout="t"] .toc .nm { font-size: 17px; line-height: 32px; }
+:root[data-layout="p"] .toc .n, :root[data-layout="t"] .toc .n { line-height: 32px; }
+:root[data-layout="p"] .toc .lead, :root[data-layout="t"] .toc .lead, :root[data-layout="p"] .toc-disc, :root[data-layout="t"] .toc-disc { display: none; }
+:root[data-layout="p"] .toc a[aria-current="page"], :root[data-layout="t"] .toc a[aria-current="page"] { box-shadow: inset 0 -1px 0 var(--sumi); }
+/* the language switch at the header's right, quieter than the name: set like the role (12 / 18, 400), on the role's baseline, the
+   language on view told only by its ink; 26 px clear of the hashira. The identity keeps clear of it */
+:root[data-layout="p"] .words > .lang, :root[data-layout="t"] .words > .lang { position: absolute; top: 22px; right: 40px; gap: 7px; font: var(--gw4) 12px/18px var(--gothic); letter-spacing: .04em; }
+/* a name that is itself the plate (林文 in a Chinese profile): the role is the identity's first line */
+:root[data-layout="p"] .words:has(> .id .is-name) > .lang, :root[data-layout="t"] .words:has(> .id .is-name) > .lang { top: 0; }
+/* each word a 44 × 44 target (the box itself, so it is what a finger meets), reaching outwards; the dot between them stays outside both */
+:root[data-layout="p"] .words > .lang .lang-a, :root[data-layout="t"] .words > .lang .lang-a { padding: 13px 6px; margin: -13px -6px; }
+:root[data-layout="p"] .words > .lang .lang-a:first-of-type, :root[data-layout="t"] .words > .lang .lang-a:first-of-type { padding-left: 14px; margin-left: -14px; }
+:root[data-layout="p"] .words > .lang .lang-a:last-of-type, :root[data-layout="t"] .words > .lang .lang-a:last-of-type { padding-right: 16px; margin-right: -16px; }
+:root[data-layout="p"] .words > .lang .lang-a::after, :root[data-layout="t"] .words > .lang .lang-a::after { content: none; }
+:root[data-layout="p"] .words:has(> .lang) > .id, :root[data-layout="t"] .words:has(> .lang) > .id { padding-right: 112px; }
+/* F9: the three tabs fit at 360 */
+@media (max-width: 379px) { :root[data-layout="p"] .toc ol { gap: 16px; } :root[data-layout="p"] .toc .nm { font-size: 16px; } }
+:root[data-layout="p"] .hashira, :root[data-layout="t"] .hashira { top: calc(22px + env(safe-area-inset-top, 0px)); left: auto; right: calc(var(--m) + env(safe-area-inset-right, 0px)); }
+:root[data-layout="p"] .hashira .jp, :root[data-layout="t"] .hashira .jp { font-size: 13px; letter-spacing: .36em; }
+:root[data-layout="p"] .hashira .rule, :root[data-layout="t"] .hashira .rule, :root[data-layout="p"] .hashira .en, :root[data-layout="t"] .hashira .en { display: none; }
+:root[data-layout="p"] .hands, :root[data-layout="t"] .hands { left: calc(var(--m) + env(safe-area-inset-left, 0px)); right: calc(var(--m) + env(safe-area-inset-right, 0px)); width: auto; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); gap: 12px; }
+:root[data-layout="p"] .w, :root[data-layout="t"] .w { height: 44px; font-size: 14px; line-height: 44px; padding: 0 12px; }
+:root[data-layout="p"] .w.ar, :root[data-layout="t"] .w.ar { font-size: 18px; line-height: 44px; padding: 0 9px 2px; }
+:root[data-layout="p"] .ct, :root[data-layout="t"] .ct { font-size: 14px; line-height: 44px; min-width: 48px; }
+:root[data-layout="p"] .sep, :root[data-layout="t"] .sep { margin: 0 2px; }
+@media (max-width: 379px) { :root[data-layout="p"] .w { padding: 0 9px; font-size: 13.5px; } :root[data-layout="p"] .hands { gap: 8px; } }
+.pf { align-items: center; gap: 10px; height: 44px; font: var(--gw5) 14px/20px var(--gothic); letter-spacing: .04em; color: var(--sumi); white-space: nowrap; }
+:root[data-layout="p"] .pf, :root[data-layout="t"] .pf { display: inline-flex; }
+.pf .av { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--hakuji); box-shadow: inset 0 0 0 .5px rgb(var(--sh) / .25); font: 500 13px/1 var(--mincho); color: var(--sumi); }
+:root[data-layout="p"] .hint, :root[data-layout="t"] .hint { display: block; position: fixed; z-index: 5; left: calc(var(--m) + env(safe-area-inset-left, 0px)); right: calc(var(--m) + env(safe-area-inset-right, 0px)); bottom: calc(76px + env(safe-area-inset-bottom, 0px)); font: var(--gw4) 12px/18px var(--gothic); color: var(--tetsu); }
+/* phone: the leaves keep off the header and the foot */
+:root[data-layout="p"] .cast, :root[data-layout="t"] .cast { -webkit-mask-image: linear-gradient(transparent 0 128px, #000 196px, #000 calc(100% - 132px), transparent calc(100% - 100px)); mask-image: linear-gradient(transparent 0 128px, #000 196px, #000 calc(100% - 132px), transparent calc(100% - 100px)); }
+:root[data-layout="t"] .cast { -webkit-mask-image: linear-gradient(transparent 0 200px, #000 260px, #000 calc(100% - 140px), transparent calc(100% - 108px)); mask-image: linear-gradient(transparent 0 200px, #000 260px, #000 calc(100% - 140px), transparent calc(100% - 108px)); }
+
+/* ------------------------------------------------------------------ phone held sideways (height ≤ 500): a 172 px column, the book beside it */
+:root[data-layout="l"] { --row: 36px; }
+:root[data-layout="l"] .words { left: calc(20px + env(safe-area-inset-left, 0px)); top: 16px; bottom: 16px; width: 172px; }
+:root[data-layout="l"] .id[data-plate] { column-gap: 10px; }
+:root[data-layout="l"] .nameplate { font-size: 15px; letter-spacing: .14em; }
+:root[data-layout="l"] .id-name { font-size: 15px; line-height: 20px; }
+:root[data-layout="l"] .id-role { font-size: 11.5px; line-height: 17px; }
+:root[data-layout="l"] .id-where { display: none; }
+:root[data-layout="l"] .toc { margin-top: 22px; --rh: 30px; }
+:root[data-layout="l"] .toc .nm { font-size: 16px; }
+:root[data-layout="l"] .toc-disc { left: -12px; }
+:root[data-layout="l"] .words > .lang { margin-top: 18px; font-size: 12px; }
+:root[data-layout="l"] .hands { left: calc(20px + env(safe-area-inset-left, 0px)); width: 172px; bottom: 16px; justify-content: flex-start; gap: 0; }
+:root[data-layout="l"] .ctl { justify-content: flex-start; flex-wrap: wrap; }
+:root[data-layout="l"] .ctl > .w:first-child, :root[data-layout="l"] .ctl > .w.ar:first-child { padding-left: 0; }
+:root[data-layout="l"] .w { height: 36px; font-size: 12px; line-height: 36px; padding: 0 8px; }
+:root[data-layout="l"] .w.ar { font-size: 16px; line-height: 36px; padding: 0 8px 2px; }
+:root[data-layout="l"] .ct { font-size: 12px; line-height: 36px; min-width: 40px; }
+:root[data-layout="l"] .cast { -webkit-mask-image: linear-gradient(to right, transparent 200px, #000 260px); mask-image: linear-gradient(to right, transparent 200px, #000 260px); }
+
+/* ------------------------------------------------------------------ the Profile sheet (§1.6.9): a bottom sheet, a left sheet sideways */
+dialog.sheet { position: fixed; inset: auto 0 0 0; width: 100%; max-width: none; max-height: min(86dvh, 720px); margin: 0; padding: 0 0 calc(24px + env(safe-area-inset-bottom, 0px)); border: 0; border-radius: 16px 16px 0 0; overflow: auto; overscroll-behavior: contain; color: var(--tetsu); background: var(--glass); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15); box-shadow: var(--shadow-glass); outline: none; translate: 0 var(--dy, 0px); animation: sheet-in .36s var(--ease); transition: translate .2s var(--ease); }
+dialog.sheet::backdrop { background: rgb(233 238 241 / .36); animation: xf-in .36s var(--ease); }
+dialog.sheet[data-out] { translate: 0 100%; transition: translate .3s var(--ease); }
+@keyframes sheet-in { from { translate: 0 100%; } }
+.sheet-grip { display: grid; place-items: center; height: 28px; touch-action: none; cursor: grab; }
+.sheet-grip i { width: 36px; height: 4px; border-radius: 2px; background: var(--shironezu); }
+.sheet-body { display: grid; gap: 24px; padding: 0 20px; }
+.sheet .jo { margin: 0; font-size: 15px; line-height: 26px; -webkit-line-clamp: unset; display: block; }
+.sheet .case { flex-wrap: wrap; row-gap: 0; }
+.sheet .prefs { gap: 28px; }
+.sheet .pw { font-size: 13px; }
+:root[data-layout="l"] dialog.sheet { inset: 0 auto 0 0; width: min(380px, 70vw); max-height: none; height: 100%; border-radius: 0 16px 16px 0; padding: 20px 0 20px env(safe-area-inset-left, 0px); animation-name: sheet-in-l; }
+:root[data-layout="l"] dialog.sheet[data-out] { translate: -100% 0; }
+:root[data-layout="l"] .sheet-grip { display: none; }
+@keyframes sheet-in-l { from { translate: -100% 0; } }
+@media (prefers-reduced-transparency: reduce) { dialog.sheet, .tip, .pouch-index:focus-within ol { background: var(--hakuji); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* ------------------------------------------------------------------ the text version's frame (the sheet itself is in letter.css) */
+.page:not([data-view="folio"]) > .lang { position: fixed; z-index: 6; top: var(--m); right: calc(var(--x0) + var(--m) + 40 * var(--u)); }
+:root[data-layout="p"] .page:not([data-view="folio"]) > .lang { position: absolute; top: 20px; right: 20px; font-size: 13px; }
+.page:not([data-view="folio"]) .back { position: fixed; z-index: 6; left: calc(var(--x0) + var(--m)); top: var(--m); display: inline-flex; gap: calc(6 * var(--u)); font: var(--gw5) calc(12.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .05em; color: var(--sumi); }
+:root[data-layout="p"] .page:not([data-view="folio"]) .back { position: absolute; top: 20px; left: 20px; }
+.sheetwrap { position: relative; z-index: 5; display: block; padding: calc(var(--m) + 48px) 16px calc(var(--m) + 48px); outline: none; }
+:root[data-layout="p"] .sheetwrap { padding: 60px 0 0; }
+
+/* ------------------------------------------------------------------ reduced motion: no blur transitions; opacity only */
+@media (prefers-reduced-motion: reduce) {
+  .xf-i, .dawn, dialog.sheet, dialog.sheet::backdrop { animation: none !important; }
+  .stage-host .folio-book, .stage-host:not([data-ready]) .folio-book, .panel[data-leaving] .stage-host { filter: none; transition: opacity .2s linear; }
+  .toc-disc { transition: none; }
+}
+/* reduced transparency: the tooth only (no glow, no fibres) */
+@media (prefers-reduced-transparency: reduce) { .lift, .desk .fl { display: none; } }
+@media (prefers-contrast: more) { :root { --ainezu: var(--tetsu); --usuzumi: var(--ainezu); } }

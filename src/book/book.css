@@ -1,0 +1,732 @@
+/*
+ * sasshi / book: styles for BookView (the controls) and FlatBook (the DOM fallback).
+ * No Tailwind, no @layer. Everything reads --folio-* custom properties with fallbacks; set them on any ancestor to theme the book:
+ *   --folio-bg      page colour behind the book (the 3D canvas clears transparent over the page; the frosted cover reads this colour as
+ *                   what lies behind it, so keep it the plain colour of the desk)
+ *   --folio-ink, --folio-ink-2, --folio-ink-3, --folio-raised, --folio-line, --folio-hover, --folio-accent, --folio-font, --folio-ease
+ *   --folio-serif, --folio-mono  the print's serif and mono (default: the page's --serif / --mono when it defines them)
+ * Light only: there is no dark mode.
+ */
+
+.folio-book,
+.folio-flat:not(.folio-book .folio-flat) {
+  --f-bg: var(--folio-bg, #e3e8eb);
+  --f-raised: var(--folio-raised, #ffffff);
+  --f-ink: var(--folio-ink, #1d242c);
+  --f-ink-2: var(--folio-ink-2, #55606c);
+  --f-ink-3: var(--folio-ink-3, #86909b);
+  --f-line: var(--folio-line, rgb(29 36 44 / 0.14));
+  --f-hover: var(--folio-hover, rgb(29 36 44 / 0.07));
+  --f-accent: var(--folio-accent, #2f6fed);
+  --f-font: var(--folio-font, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans", "Noto Sans CJK SC", system-ui, sans-serif);
+  /* sasshi: the print's serif and mono (cover stamp, folio liner, album painters): --folio-serif / --folio-mono (or the
+     --folio-font-serif / --folio-font-mono spelling), else the page's own --serif / --mono; empty when none is set (then the cover keeps
+     its sans stamp and the painters their system stacks) */
+  --f-serif: var(--folio-serif, var(--folio-font-serif, var(--serif, )));
+  --f-mono: var(--folio-mono, var(--folio-font-mono, var(--mono, )));
+  --f-ease: var(--folio-ease, cubic-bezier(0.22, 1, 0.36, 1));
+  /* The sleeve pages are physical objects: clear PVC over liner paper (same as the 3D scene) */
+  --fb-film: #eef1f3;
+  --fb-seam: #f5f6f8;
+  --fb-liner: #e5e8eb;
+  --fb-leather: #222b35;
+  --fb-line: rgb(31 38 48 / 0.14);
+  --fb-edge: rgb(255 255 255 / 0.85);
+}
+
+:is(.folio-book, .folio-flat),
+:is(.folio-book, .folio-flat) *,
+:is(.folio-book, .folio-flat) *::before,
+:is(.folio-book, .folio-flat) *::after {
+  box-sizing: border-box;
+}
+
+.folio-book {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  isolation: isolate;
+  /* sasshi: transparent, like the canvas: the page's desk (and its fibres) is the ground the book lies on */
+  background: transparent;
+  color: var(--f-ink);
+  font-family: var(--f-font);
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  overscroll-behavior: contain;
+}
+.folio-book:focus-visible {
+  outline: 2px solid var(--f-accent);
+  outline-offset: -2px;
+}
+.folio-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.folio-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── controls: one floating pill at the bottom; the strip itself never blocks dragging pages ── */
+.folio-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px calc(env(safe-area-inset-bottom, 0px) + 14px);
+  pointer-events: none;
+}
+.folio-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--f-raised) 82%, transparent);
+  box-shadow:
+    0 0 0 1px var(--f-line),
+    0 8px 22px -10px rgb(0 0 0 / 0.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  pointer-events: auto;
+}
+/* closed: only the "Open" button, no pill around it */
+.folio-nav[data-closed] {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.folio-nav[data-closed] .folio-btn-primary {
+  height: 44px;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--f-ink) 70%, transparent),
+    0 10px 24px -10px rgb(0 0 0 / 0.45);
+}
+.folio-nav-rule {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: var(--f-line);
+}
+.folio-count {
+  min-width: 64px;
+  margin: 0;
+  color: var(--f-ink-2);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  pointer-events: none;
+}
+.folio-count-sep {
+  color: var(--f-ink-3);
+}
+.folio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--f-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 160ms var(--f-ease),
+    scale 160ms var(--f-ease),
+    opacity 160ms var(--f-ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .folio-btn:hover:not(:disabled) {
+    background: var(--f-hover);
+  }
+}
+.folio-btn:active:not(:disabled) {
+  scale: 0.94;
+}
+.folio-btn:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+.folio-btn:focus-visible {
+  outline: 2px solid var(--f-accent);
+  outline-offset: 1px;
+}
+.folio-btn-primary {
+  padding: 0 18px 0 14px;
+  background: var(--f-ink);
+  color: var(--f-bg);
+}
+@media (hover: hover) and (pointer: fine) {
+  .folio-btn-primary:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--f-ink) 88%, var(--f-bg));
+  }
+}
+@media (pointer: coarse) {
+  .folio-btn {
+    min-width: 44px;
+    height: 44px;
+  }
+}
+
+/* ── cards on the visible pages for screen readers / keyboard: invisible until focused ── */
+.folio-links ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.folio-links :is(a, button) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* sasshi: a focused card link is a printed word, not a chip (spec §1.6.8, §1.6.14): no ground, no shadow, no pill. It sits just
+   above the page's bottom line, flush with the book box's left edge, never closer to the screen edge than the page margin (the shell's
+   grid tokens; the fallbacks keep it sane elsewhere). */
+.folio-links :is(a, button):focus-visible {
+  left: max(var(--box-l, 16px), var(--m, 16px));
+  bottom: calc(var(--m, 16px) + var(--row, 40px) + 8px + env(safe-area-inset-bottom, 0px));
+  width: auto;
+  height: auto;
+  max-width: calc(100% - max(var(--box-l, 16px), var(--m, 16px)) - 16px);
+  padding: 0;
+  overflow: hidden;
+  clip-path: none;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  box-shadow: none;
+  color: var(--sumi, var(--f-ink));
+  font: var(--gw5, 500) 12.5px/20px var(--gothic, var(--folio-font, sans-serif));
+  letter-spacing: 0.05em;
+  text-overflow: ellipsis;
+  outline: 2px solid var(--ai, var(--f-accent));
+  outline-offset: 3px;
+  z-index: 2;
+}
+/* the shell's phone and tablet layouts keep their hint just above the bottom row: there the word goes under the top of the book box */
+:root:is([data-layout="p"], [data-layout="t"]) .folio-links :is(a, button):focus-visible {
+  top: calc(var(--box-t, 16px) + 4px);
+  bottom: auto;
+}
+
+/* ── loading: a slim bar and a line of text in the middle ── */
+.folio-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  pointer-events: none;
+  transition: opacity 400ms var(--f-ease);
+  animation: folio-fade-in 400ms var(--f-ease) both;
+}
+.folio-loading p {
+  margin: 0;
+  color: var(--f-ink-3);
+  font-size: 13px;
+}
+.folio-loading[data-done] {
+  opacity: 0;
+  transition-delay: 200ms;
+}
+.folio-loader {
+  position: relative;
+  width: clamp(96px, 30%, 140px);
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--f-ink-3) 35%, transparent);
+}
+.folio-loader-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--f-ink);
+  translate: calc((var(--p, 0) - 1) * 100%) 0;
+  transition: translate 500ms var(--f-ease);
+}
+@keyframes folio-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ── FlatBook: the same album in CSS ── */
+.folio-flat {
+  position: absolute;
+  inset: 12px 12px calc(var(--folio-foot-h, 0px) + 8px);
+  display: grid;
+  place-items: center;
+  container-type: size;
+  /* sideways swipes turn pages */
+  touch-action: pan-y pinch-zoom;
+}
+.folio-flat-book {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: min(100cqw, 100cqh * var(--fb-ratio));
+  aspect-ratio: var(--fb-ratio);
+  padding: var(--fb-pad);
+  border-radius: 1.2cqw;
+  background: var(--fb-leather);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    0 2px 4px rgb(0 0 0 / 0.1),
+    0 24px 48px -24px rgb(0 0 0 / 0.45);
+  animation: folio-flat-in 340ms var(--f-ease) both;
+}
+.folio-flat-book[data-dir="prev"] {
+  --fb-from: -16px;
+}
+@keyframes folio-flat-in {
+  from {
+    opacity: 0;
+    translate: var(--fb-from, 16px) 0;
+  }
+}
+/* closed: the cover preview, centred; click opens */
+.folio-flat-cover {
+  display: block;
+  width: min(100cqw, 100cqh * 236 / 206, 560px);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  animation: folio-flat-in 340ms var(--f-ease) both;
+}
+.folio-flat-cover:focus-visible {
+  outline: 2px solid var(--f-accent);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+.folio-flat[data-material="frost"] .folio-flat-book {
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.5),
+    0 2px 4px rgb(0 0 0 / 0.08),
+    0 24px 48px -24px rgb(0 0 0 / 0.3);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.folio-flat-page,
+.folio-flat-liner {
+  position: relative;
+  flex: none;
+  width: var(--fb-side);
+  aspect-ratio: var(--fb-page-ratio);
+  border-radius: 2px;
+}
+.folio-flat-liner {
+  background: var(--fb-liner);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.05);
+}
+.folio-flat-ex {
+  position: absolute;
+  left: 8.5%;
+  bottom: 8%;
+  max-width: 80%;
+  margin: 0;
+  overflow: hidden;
+  color: var(--f-ink-3, #86909b);
+  font-family: var(--f-font);
+  font-size: clamp(9px, 1.15cqw, 13px);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folio-flat-ex::before {
+  content: "";
+  display: block;
+  width: 2.4em;
+  height: 1px;
+  margin-bottom: 0.9em;
+  background: currentColor;
+}
+/* clear sleeve: a film over the liner, one slanted highlight, a thin bright edge */
+.folio-flat-page {
+  background: var(--fb-film);
+  box-shadow:
+    inset 0 0 0 1px var(--fb-edge),
+    0 1px 2px rgb(0 0 0 / 0.12),
+    0 10px 24px -14px rgb(0 0 0 / 0.4);
+}
+.folio-flat-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(118deg, transparent 28%, rgb(255 255 255 / 0.16) 42%, transparent 58%);
+  pointer-events: none;
+}
+.folio-flat-hole {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--fb-leather);
+  box-shadow: 0 0 0 1px var(--fb-edge);
+}
+.folio-flat-pocket {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  box-shadow:
+    0 0 0 1px var(--fb-line),
+    0 0 0 3px var(--fb-seam);
+}
+/* pocket mouth: the front film stops a little short */
+.folio-flat-pocket::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 3.8%;
+  height: 1px;
+  background: var(--fb-edge);
+  box-shadow: 0 1px 0 var(--fb-line);
+  z-index: 1;
+  pointer-events: none;
+}
+/* an item: the content's own painting (a canvas the size of its pocket, the same painter as the 3D sides) */
+.folio-flat-item {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: translate 160ms var(--f-ease);
+}
+.folio-flat-item > canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.folio-flat-item:focus-visible {
+  outline: 2px solid var(--f-accent);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .folio-flat-item:hover {
+    translate: 0 -1.5%;
+  }
+}
+/* spine: a metal base with a row of rings spanning the two pages' holes */
+.folio-flat-spine {
+  position: relative;
+  flex: none;
+  width: var(--fb-spine);
+}
+.folio-flat-spine::before {
+  content: "";
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 1.6%;
+  bottom: 1.6%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8d959e, #e6e9ed 45%, #b9c0c7 70%, #8a929b);
+}
+.folio-flat-ring {
+  position: absolute;
+  left: 50%;
+  width: var(--fb-ring);
+  aspect-ratio: 10;
+  translate: -50% -50%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f5f7f9, #a7afb8 55%, #dde2e7);
+  box-shadow: 0 1.5px 2px rgb(0 0 0 / 0.35);
+  z-index: 2;
+}
+
+/* ── CoverPreview: the closed cover in pure CSS. Geometry is in container units (cqw), so it scales from a thumbnail to a big cover.
+   Frost = milky translucent with the first page ghosting through; cloth = fine weave; leather = soft sheen and grain.
+   Foil: silver / champagne gold are metallic gradients; blind is a tone-on-tone deboss. ── */
+.folio-cv {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  aspect-ratio: 236 / 206;
+  container-type: inline-size;
+  text-align: left;
+  border-radius: 2.4cqw 3.2cqw 3.2cqw 2.4cqw;
+  isolation: isolate;
+  box-shadow:
+    0 0.6cqw 1.2cqw rgb(0 0 0 / 0.12),
+    0 4cqw 8cqw -4cqw rgb(0 0 0 / 0.28);
+}
+.folio-cv-face,
+.folio-cv-spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+.folio-cv-face {
+  left: 7cqw;
+  right: 0;
+  border-radius: 0 3.2cqw 3.2cqw 0;
+  background: var(--cv-base);
+  box-shadow:
+    inset 0 0 0 0.4cqw rgb(255 255 255 / 0.14),
+    inset 0 -0.6cqw 0 rgb(0 0 0 / 0.06);
+}
+.folio-cv-spine {
+  left: 0;
+  width: 7.6cqw;
+  border-radius: 2.4cqw 0 0 2.4cqw;
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / 0.1), transparent 45%, rgb(0 0 0 / 0.16) 88%, rgb(0 0 0 / 0.28)),
+    var(--cv-base);
+}
+.folio-cv[data-material="cloth"] :is(.folio-cv-face, .folio-cv-spine) {
+  background-image:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.06) 0 1px, transparent 1px 3px),
+    linear-gradient(160deg, rgb(255 255 255 / 0.08), transparent 60%);
+}
+.folio-cv[data-material="cloth"] .folio-cv-spine {
+  background-image:
+    linear-gradient(90deg, rgb(255 255 255 / 0.08), transparent 45%, rgb(0 0 0 / 0.16) 88%, rgb(0 0 0 / 0.28)),
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.09) 0 1px, transparent 1px 2px);
+}
+.folio-cv[data-material="leather"] .folio-cv-face {
+  background-image:
+    radial-gradient(120% 90% at 22% 8%, rgb(255 255 255 / 0.2), transparent 55%),
+    radial-gradient(rgb(0 0 0 / 0.1) 0.6px, transparent 0.8px),
+    radial-gradient(rgb(255 255 255 / 0.06) 0.6px, transparent 0.8px);
+  background-size:
+    auto,
+    3px 3px,
+    3px 3px;
+  background-position:
+    0 0,
+    0 0,
+    1.5px 1.5px;
+}
+.folio-cv[data-material="frost"] .folio-cv-face {
+  background:
+    linear-gradient(170deg, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.12) 55%, rgb(0 0 0 / 0.04)),
+    var(--cv-base);
+  box-shadow:
+    inset 0 0 0 0.5cqw rgb(255 255 255 / 0.55),
+    inset 0 -0.6cqw 0 rgb(0 0 0 / 0.05);
+}
+.folio-cv[data-material="frost"] .folio-cv-spine {
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / 0.4), transparent 50%, rgb(0 0 0 / 0.1)),
+    var(--cv-base);
+}
+.folio-cv-ghost {
+  position: absolute;
+  inset: 0;
+  filter: blur(max(1.6cqw, 2.5px));
+  opacity: 0.38;
+}
+.folio-cv-ghost > i {
+  position: absolute;
+  width: 38cqw;
+  height: 24cqw;
+  border-radius: 2cqw;
+}
+.folio-cv-ghost > i:nth-child(1) {
+  left: 13cqw;
+  top: 9cqw;
+  background: #4f6f93;
+}
+.folio-cv-ghost > i:nth-child(2) {
+  left: 55cqw;
+  top: 9cqw;
+  background: #b98f5c;
+}
+.folio-cv-ghost > i:nth-child(3) {
+  left: 13cqw;
+  top: 37cqw;
+  background: #5f8f76;
+}
+/* the metal rings: a column of shadow along the spine edge */
+.folio-cv-ghost > i:nth-child(4) {
+  left: 1.5cqw;
+  top: 8cqw;
+  width: 5cqw;
+  height: 70cqw;
+  border-radius: 1cqw;
+  background: repeating-linear-gradient(180deg, #5c646c 0 2.4cqw, transparent 2.4cqw 22cqw);
+}
+/* the display pocket: top right, a clear sleeve with a pressed edge */
+.folio-cv-window {
+  position: absolute;
+  top: 10cqw;
+  right: 8cqw;
+  width: 39cqw;
+  aspect-ratio: 85.6 / 54;
+  padding: 1cqw;
+  border-radius: 2.4cqw;
+  background: rgb(255 255 255 / 0.16);
+  box-shadow:
+    inset 0 0 0 0.35cqw rgb(255 255 255 / 0.5),
+    0 0 0 0.35cqw rgb(0 0 0 / 0.08);
+}
+.folio-cv-window::before {
+  content: "";
+  position: absolute;
+  inset: 1cqw;
+  border-radius: 1.6cqw;
+  background: var(--cv-window, transparent);
+}
+.folio-cv-window > img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 3.7% / 5.9%;
+  box-shadow: 0 0.3cqw 0.8cqw rgb(0 0 0 / 0.25);
+}
+.folio-cv-window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(125deg, rgb(255 255 255 / 0.28), transparent 38%);
+}
+.folio-cv-stamp {
+  position: absolute;
+  left: 9cqw;
+  right: 9cqw;
+  bottom: 11cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 2cqw;
+}
+.folio-cv-title {
+  display: none;
+  overflow: hidden;
+  font-family: var(--f-font);
+  font-size: 5.6cqw;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folio-cv-title::before {
+  content: "";
+  display: block;
+  width: 6cqw;
+  height: 0.5cqw;
+  margin-bottom: 2.6cqw;
+  background: currentColor;
+}
+.folio-cv-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 2cqw;
+}
+.folio-cv-bars > i {
+  display: block;
+  height: 2.6cqw;
+  border-radius: 1cqw;
+}
+.folio-cv-bars > i:nth-child(1) {
+  width: 40cqw;
+}
+.folio-cv-bars > i:nth-child(2) {
+  width: 22cqw;
+}
+@container (min-width: 120px) {
+  .folio-cv-title {
+    display: block;
+  }
+  .folio-cv-bars {
+    display: none;
+  }
+}
+.folio-cv[data-foil="silver"] {
+  --cv-foil: linear-gradient(100deg, #aab2ba, #f4f6f8 42%, #c3c9cf 62%, #9ea7b0);
+}
+.folio-cv[data-foil="gold"] {
+  --cv-foil: linear-gradient(100deg, #a7884f, #f0dcae 42%, #c8aa70 62%, #9c7d45);
+}
+.folio-cv:is([data-foil="silver"], [data-foil="gold"]) .folio-cv-bars > i {
+  background: var(--cv-foil);
+  box-shadow: 0 0.2cqw 0.3cqw rgb(0 0 0 / 0.18);
+}
+.folio-cv:is([data-foil="silver"], [data-foil="gold"]) .folio-cv-title {
+  background: var(--cv-foil);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.folio-cv:is([data-foil="silver"], [data-foil="gold"]) .folio-cv-title::before {
+  background: var(--cv-foil);
+}
+.folio-cv[data-foil="blind"] .folio-cv-bars > i {
+  background: color-mix(in oklab, var(--cv-base), black 12%);
+  box-shadow:
+    inset 0 0.4cqw 0.3cqw rgb(0 0 0 / 0.22),
+    0 0.3cqw 0 rgb(255 255 255 / 0.22);
+}
+.folio-cv[data-foil="blind"] .folio-cv-title {
+  color: color-mix(in oklab, var(--cv-base), black 16%);
+  text-shadow:
+    0 0.25cqw 0 rgb(255 255 255 / 0.25),
+    0 -0.2cqw 0 rgb(0 0 0 / 0.18);
+}
+.folio-cv[data-dark][data-foil="blind"] .folio-cv-bars > i {
+  background: color-mix(in oklab, var(--cv-base), black 22%);
+  box-shadow:
+    inset 0 0.4cqw 0.3cqw rgb(0 0 0 / 0.35),
+    0 0.3cqw 0 rgb(255 255 255 / 0.1);
+}
+.folio-cv[data-dark][data-foil="blind"] .folio-cv-title {
+  color: color-mix(in oklab, var(--cv-base), black 28%);
+  text-shadow:
+    0 0.25cqw 0 rgb(255 255 255 / 0.1),
+    0 -0.2cqw 0 rgb(0 0 0 / 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-flat-book {
+    --fb-from: 0px;
+    animation-duration: 160ms;
+  }
+  .folio-flat-book[data-dir="prev"] {
+    --fb-from: 0px;
+  }
+  .folio-flat-cover {
+    animation-duration: 160ms;
+  }
+  .folio-flat-item,
+  .folio-btn,
+  .folio-loader-fill {
+    transition: none;
+  }
+}

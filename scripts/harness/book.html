@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>sasshi · book harness</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background: var(--folio-bg);
+      }
+      /* the host page owns the colours; BookView only reads --folio-bg (the canvas is transparent: the body is the desk) */
+      :root {
+        --folio-bg: #e3e8eb;
+      }
+      #root {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./book.tsx"></script>
+  </body>
+</html>
