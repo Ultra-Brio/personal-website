@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="pageTitle">向博 · 个人主页</title>
+<meta name="description" content="向博的个人网站 —— 在医学、商业与公共生活之间找交叉点">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home" class="constellation-page">
+
+<!-- 顶部：仅名字与语言切换，无其他入口 -->
+<div class="constellation-top">
+  <a class="nav-logo" href="index.html" data-i18n="navLogo">向博</a>
+  <button class="lang-toggle" id="langToggle" aria-label="切换语言">
+    <span class="lang-option" data-lang-btn="zh">中</span>
+    <span class="lang-divider">/</span>
+    <span class="lang-option" data-lang-btn="en">EN</span>
+  </button>
+</div>
+
+<!-- ============ 全屏大图 + 散布模块 ============ -->
+<div class="constellation" style="background-image:url('assets/images/la.jpg')">
+  <div class="constellation-veil"></div>
+
+  <a class="orb" href="about.html" style="--x:9%;  --y:16%; --d:0.15s; --r:-2.5deg;">
+    <span class="orb-in"><span class="orb-card">
+      <img src="assets/images/tokyo.jpg" alt="">
+      <span class="orb-label" data-i18n="navAbout">关于</span>
+    </span></span>
+  </a>
+
+  <a class="orb" href="journey.html" style="--x:57%; --y:11%; --d:0.3s; --r:2deg;">
+    <span class="orb-in"><span class="orb-card">
+      <img src="assets/images/nyc.jpg" alt="">
+      <span class="orb-label" data-i18n="navJourney">足迹</span>
+    </span></span>
+  </a>
+
+  <a class="orb" href="essays.html" style="--x:71%; --y:46%; --d:0.45s; --r:-1.5deg;">
+    <span class="orb-in"><span class="orb-card">
+      <img src="assets/images/fuji.jpg" alt="">
+      <span class="orb-label" data-i18n="navEssays">随笔</span>
+    </span></span>
+  </a>
+
+  <a class="orb" href="gallery.html" style="--x:30%; --y:52%; --d:0.6s; --r:1.8deg;">
+    <span class="orb-in"><span class="orb-card">
+      <img src="assets/gallery/placeholder-6.svg" alt="">
+      <span class="orb-label" data-i18n="navGallery">相册</span>
+    </span></span>
+  </a>
+
+  <a class="orb" href="contact.html" style="--x:13%; --y:68%; --d:0.75s; --r:2.4deg;">
+    <span class="orb-in"><span class="orb-card">
+      <img src="assets/gallery/placeholder-5.svg" alt="">
+      <span class="orb-label" data-i18n="navContact">联络</span>
+    </span></span>
+  </a>
+</div>
+
+<!-- 点击模块时的全屏转场层 -->
+<div class="orb-veil" id="orbVeil"></div>
+
+<script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

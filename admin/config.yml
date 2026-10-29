@@ -1,0 +1,47 @@
+# Sveltia CMS 配置 —— 内容后台（/admin/）
+# 使用前两步（详见 README）：
+#   1. 把 backend.repo 改成你的仓库
+#   2. 把 backend.base_url 改成你部署的 sveltia-cms-auth 授权服务地址
+backend:
+  name: github
+  repo: Ultra-Brio/personal-website
+  base_url: https://sveltia-cms-auth.你的子域.workers.dev
+
+# 媒体（照片）上传到这个文件夹
+media_folder: assets/uploads
+public_path: /assets/uploads
+
+site_url: https://ultra-brio.pages.dev
+locale: zh
+
+collections:
+  - name: essays
+    label: 随笔
+    label_singular: 篇
+    folder: content/essays
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} - {{date}}"
+    editor:
+      preview: false
+    fields:
+      - name: title
+        label: 标题
+        required: true
+      - name: date
+        label: 日期
+        widget: datetime
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        format: "YYYY-MM-DD"
+      - name: tag
+        label: 标签
+        widget: select
+        options: ["随笔", "想法", "读书", "旅行", "记录"]
+        default: "随笔"
+      - name: excerpt
+        label: 摘要（显示在列表卡片上，一两句话）
+        widget: text
+      - name: body
+        label: 正文
+        widget: markdown

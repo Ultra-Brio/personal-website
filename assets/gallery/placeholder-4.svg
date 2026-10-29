@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="900" viewBox="0 0 800 900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d1f38"/>
+      <stop offset="0.55" stop-color="#4a3f66"/>
+      <stop offset="0.82" stop-color="#a05c54"/>
+      <stop offset="1" stop-color="#ff9d5c"/>
+    </linearGradient>
+    <linearGradient id="bld" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141527"/>
+      <stop offset="1" stop-color="#0d0e1d"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="900" fill="url(#sky)"/>
+  <g fill="#ffd9a8" opacity="0.7">
+    <circle cx="695" cy="118" r="1.2"/>
+    <circle cx="546" cy="247" r="1.2"/>
+    <circle cx="42" cy="55" r="1.2"/>
+    <circle cx="397" cy="207" r="1.2"/>
+    <circle cx="159" cy="129" r="1.2"/>
+    <circle cx="375" cy="78" r="1.2"/>
+  </g>
+  <g fill="url(#bld)">
+    <rect x="0" y="739" width="125" height="161"/>
+    <rect x="140" y="785" width="99" height="115"/>
+    <rect x="248" y="701" width="118" height="199"/>
+    <rect x="375" y="739" width="96" height="161"/>
+    <rect x="477" y="767" width="79" height="133"/>
+    <rect x="564" y="748" width="80" height="152"/>
+    <rect x="654" y="734" width="125" height="166"/>
+    <rect x="783" y="769" width="105" height="131"/>
+  </g>
+  <g fill="#ffc46b" opacity="0.85">
+    <rect x="114" y="821" width="3" height="4"/>
+    <rect x="415" y="833" width="3" height="4"/>
+    <rect x="478" y="837" width="3" height="4"/>
+    <rect x="419" y="849" width="3" height="4"/>
+    <rect x="325" y="868" width="3" height="4"/>
+    <rect x="566" y="835" width="3" height="4"/>
+    <rect x="248" y="826" width="3" height="4"/>
+    <rect x="653" y="820" width="3" height="4"/>
+    <rect x="268" y="837" width="3" height="4"/>
+    <rect x="306" y="874" width="3" height="4"/>
+  </g>
+  <text x="50%" y="450" text-anchor="middle" fill="#e9e5f2" font-family="Georgia, serif"
+        font-size="30" letter-spacing="6" opacity="0.9">Campus Fair</text>
+  <text x="50%" y="486" text-anchor="middle" fill="#ffc46b" font-family="sans-serif"
+        font-size="16" letter-spacing="4" opacity="0.8">游园会 · 2024</text>
+</svg>

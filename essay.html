@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随笔 · 向博</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="essays">
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html" data-i18n="navLogo">向博</a>
+  <div class="nav-links">
+    <a href="index.html" data-nav="home" data-i18n="navHome">首页</a>
+    <a href="about.html" data-nav="about" data-i18n="navAbout">关于</a>
+    <a href="journey.html" data-nav="journey" data-i18n="navJourney">足迹</a>
+    <a href="essays.html" data-nav="essays" data-i18n="navEssays">随笔</a>
+    <a href="gallery.html" data-nav="gallery" data-i18n="navGallery">相册</a>
+    <a href="contact.html" data-nav="contact" data-i18n="navContact">联络</a>
+    <button class="lang-toggle" id="langToggle" aria-label="切换语言">
+      <span class="lang-option" data-lang-btn="zh">中</span>
+      <span class="lang-divider">/</span>
+      <span class="lang-option" data-lang-btn="en">EN</span>
+    </button>
+  </div>
+  <button class="nav-burger" id="navBurger" aria-label="菜单">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" data-nav="home" data-i18n="navHome">首页</a>
+  <a href="about.html" data-nav="about" data-i18n="navAbout">关于</a>
+  <a href="journey.html" data-nav="journey" data-i18n="navJourney">足迹</a>
+  <a href="essays.html" data-nav="essays" data-i18n="navEssays">随笔</a>
+  <a href="gallery.html" data-nav="gallery" data-i18n="navGallery">相册</a>
+  <a href="contact.html" data-nav="contact" data-i18n="navContact">联络</a>
+</div>
+
+<article class="article">
+  <div id="essayLoading" class="essays-empty">加载中…</div>
+  <div id="essayContent" style="display:none">
+    <div class="article-meta"><span id="essayDate"></span><span class="essay-tag" id="essayTag"></span></div>
+    <h1 id="essayTitle"></h1>
+    <div class="article-body" id="essayBody"></div>
+  </div>
+  <div id="essayError" class="essays-empty" style="display:none">
+    无法加载这篇文章——如果是在本地直接双击打开的，请改用
+    <code>python serve.py</code> 启动本地预览，或访问线上地址。
+  </div>
+  <a class="article-back" href="essays.html">← 返回随笔</a>
+</article>
+
+<footer class="footer">
+  <p>© 2026 向博 Xiang Bo · <span data-i18n="footerLine">用代码与暮色写成</span></p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/md.js"></script>
+<script>
+(function () {
+  const slug = new URLSearchParams(location.search).get("slug");
+  if (!slug) { document.getElementById("essayError").style.display = ""; document.getElementById("essayLoading").style.display = "none"; }
+  else {
+    fetch("content/essays/" + slug + ".md")
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then((text) => {
+        const { meta, body } = parseFrontmatter(text);
+        document.title = (meta.title || "随笔") + " · 向博";
+        document.getElementById("essayTitle").textContent = meta.title || "";
+        document.getElementById("essayDate").textContent = meta.date || "";
+        document.getElementById("essayTag").textContent = meta.tag || "随笔";
+        document.getElementById("essayBody").innerHTML = renderMarkdown(body);
+        document.getElementById("essayLoading").style.display = "none";
+        document.getElementById("essayContent").style.display = "";
+      })
+      .catch(() => {
+        document.getElementById("essayLoading").style.display = "none";
+        document.getElementById("essayError").style.display = "";
+      });
+  }
+})();
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>

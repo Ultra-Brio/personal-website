@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="pageTitle">向博 · 个人主页</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="gallery">
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html" data-i18n="navLogo">向博</a>
+  <div class="nav-links">
+    <a href="index.html" data-nav="home" data-i18n="navHome">首页</a>
+    <a href="about.html" data-nav="about" data-i18n="navAbout">关于</a>
+    <a href="journey.html" data-nav="journey" data-i18n="navJourney">足迹</a>
+    <a href="essays.html" data-nav="essays" data-i18n="navEssays">随笔</a>
+    <a href="gallery.html" data-nav="gallery" data-i18n="navGallery">相册</a>
+    <a href="contact.html" data-nav="contact" data-i18n="navContact">联络</a>
+    <button class="lang-toggle" id="langToggle" aria-label="切换语言">
+      <span class="lang-option" data-lang-btn="zh">中</span>
+      <span class="lang-divider">/</span>
+      <span class="lang-option" data-lang-btn="en">EN</span>
+    </button>
+  </div>
+  <button class="nav-burger" id="navBurger" aria-label="菜单">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" data-nav="home" data-i18n="navHome">首页</a>
+  <a href="about.html" data-nav="about" data-i18n="navAbout">关于</a>
+  <a href="journey.html" data-nav="journey" data-i18n="navJourney">足迹</a>
+  <a href="essays.html" data-nav="essays" data-i18n="navEssays">随笔</a>
+  <a href="gallery.html" data-nav="gallery" data-i18n="navGallery">相册</a>
+  <a href="contact.html" data-nav="contact" data-i18n="navContact">联络</a>
+</div>
+
+<!-- ============ 横幅（洛杉矶 · 暮色街头） ============ -->
+<header class="page-banner" style="background-image:url('assets/images/la.jpg')">
+  <div class="page-banner-inner">
+    <h1 data-i18n="galleryTitle">相册</h1>
+    <p data-i18n="gallerySub">支教、宣讲、活动与生活的碎片——点击查看大图。</p>
+  </div>
+</header>
+
+<main>
+  <section class="section" style="padding-top: 70px;">
+    <div class="masonry reveal" id="masonry">
+      <figure class="masonry-item" data-caption-zh="乡村支教 · 浙江后岸" data-caption-en="Rural teaching · Hou'an, Zhejiang">
+        <img src="assets/gallery/placeholder-1.svg" alt="乡村支教" loading="lazy">
+        <figcaption>乡村支教 · 浙江后岸</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="返校宣讲 · 作为队长" data-caption-en="School talks as team leader">
+        <img src="assets/gallery/placeholder-2.svg" alt="返校宣讲" loading="lazy">
+        <figcaption>返校宣讲 · 作为队长</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="科普大赛 · 一等奖" data-caption-en="Science communication award">
+        <img src="assets/gallery/placeholder-3.svg" alt="科普大赛" loading="lazy">
+        <figcaption>科普大赛 · 一等奖</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="活动策划 · 现场记录" data-caption-en="Event planning in action">
+        <img src="assets/gallery/placeholder-4.svg" alt="活动策划" loading="lazy">
+        <figcaption>活动策划 · 现场记录</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="长江边 · 志愿服务" data-caption-en="Volunteering by the Yangtze">
+        <img src="assets/gallery/placeholder-5.svg" alt="长江清岸" loading="lazy">
+        <figcaption>长江边 · 志愿服务</figcaption>
+      </figure>
+      <figure class="masonry-item" data-caption-zh="城市与暮色 · 摄影" data-caption-en="City & dusk · photography">
+        <img src="assets/gallery/placeholder-6.svg" alt="城市暮色" loading="lazy">
+        <figcaption>城市与暮色 · 摄影</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="关闭">×</button>
+  <button class="lightbox-prev" id="lightboxPrev" aria-label="上一张">‹</button>
+  <button class="lightbox-next" id="lightboxNext" aria-label="下一张">›</button>
+  <figure class="lightbox-body">
+    <img id="lightboxImg" src="" alt="">
+    <figcaption id="lightboxCaption"></figcaption>
+  </figure>
+</div>
+
+<footer class="footer">
+  <p>© 2026 向博 Xiang Bo · <span data-i18n="footerLine">用代码与暮色写成</span></p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
