@@ -695,22 +695,25 @@ body { animation: pageIn 0.5s ease both; }
     radial-gradient(ellipse at center, transparent 55%, rgba(19,21,39,0.42) 100%);
 }
 
-/* ---------- 背景超大名字水印 ---------- */
+/* ---------- 名字：平时隐藏，悬停模块（背景虚化）时渐显 ---------- */
 .constellation-name {
   position: absolute; inset: 0; z-index: 2;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   pointer-events: none; user-select: none;
+  opacity: 0;
+  transition: opacity 0.85s ease;
 }
+.constellation.bg-blur .constellation-name { opacity: 1; }
 .constellation-name .cn {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: min(30vw, 44vh);
   line-height: 1;
   letter-spacing: 0.08em;
-  color: rgba(233, 229, 242, 0.09);
-  filter: blur(5px);
-  text-shadow: 0 0 80px rgba(255, 196, 107, 0.10);
+  color: rgba(255, 255, 255, 0.62);
+  filter: blur(3px);
+  text-shadow: 0 0 90px rgba(255, 255, 255, 0.22);
 }
 .constellation-name .en {
   font-family: var(--font-en-display);
@@ -718,7 +721,7 @@ body { animation: pageIn 0.5s ease both; }
   letter-spacing: 1.1em;
   text-indent: 1.1em; /* 抵消末字符字距，保持视觉居中 */
   text-transform: uppercase;
-  color: rgba(233, 229, 242, 0.15);
+  color: rgba(255, 255, 255, 0.42);
   filter: blur(1px);
   margin-top: 2.5vh;
 }
