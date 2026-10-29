@@ -57,6 +57,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return
         super().do_GET()
 
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-cache")
+        super().end_headers()
+
     def log_message(self, *args):
         pass
 

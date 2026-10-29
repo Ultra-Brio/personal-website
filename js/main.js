@@ -189,6 +189,39 @@
   }
   renderEssays();
 
+  /* ================= 首页星座导航 ================= */
+  const constellation = document.getElementById("constellation");
+  if (constellation) {
+    const orbsEls = [...constellation.querySelectorAll(".orb")];
+
+    // 每次打开随机生成互不重叠的模块位置
+    const placed = [];
+    let guard = 0;
+    while (placed.length < orbsEls.length && guard < 800) {
+      guard++;
+      const x = 3 + Math.random() * 70;
+      const y = 10 + Math.random() * 62;
+      // 最小间距：横向约 19vw、纵向约 26vh，保证卡片互不挤压
+      if (placed.every((p) => Math.hypot((p.x - x) * 1.4, p.y - y) > 26)) {
+        placed.push({ x, y });
+      }
+    }
+    orbsEls.forEach((orb, i) => {
+      const p = placed[i] || { x: 4 + i * 19, y: 16 + (i % 2) * 44 };
+      orb.style.left = p.x.toFixed(2) + "%";
+      orb.style.top = p.y.toFixed(2) + "%";
+      orb.style.setProperty("--r", (Math.random() * 5 - 2.5).toFixed(2) + "deg");
+      orb.style.setProperty("--d", (Math.random() * 0.9).toFixed(2) + "s");
+      orb.classList.add("placed");
+
+      // 悬停模块时背景渐进虚化
+      orb.addEventListener("mouseenter", () => constellation.classList.add("bg-blur"));
+      orb.addEventListener("mouseleave", () => constellation.classList.remove("bg-blur"));
+      orb.addEventListener("focus", () => constellation.classList.add("bg-blur"));
+      orb.addEventListener("blur", () => constellation.classList.remove("bg-blur"));
+    });
+  }
+
   /* ================= 首页星座导航：点击模块的转场 ================= */
   const orbs = document.querySelectorAll(".orb");
   const orbVeil = document.getElementById("orbVeil");

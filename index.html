@@ -6,6 +6,7 @@
 <title data-i18n="pageTitle">向博 · 个人主页</title>
 <meta name="description" content="向博的个人网站 —— 在医学、商业与公共生活之间找交叉点">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap">
 </head>
 <body data-page="home" class="constellation-page">
 
@@ -19,39 +20,45 @@
   </button>
 </div>
 
-<!-- ============ 全屏大图 + 散布模块 ============ -->
-<div class="constellation" style="background-image:url('assets/images/la.jpg')">
+<!-- ============ 全屏大图 + 散布模块（位置每次随机） ============ -->
+<div class="constellation" id="constellation">
+  <div class="constellation-bg" style="background-image:url('assets/images/la.jpg')"></div>
   <div class="constellation-veil"></div>
 
-  <a class="orb" href="about.html" style="--x:9%;  --y:16%; --d:0.15s; --r:-2.5deg;">
+  <div class="constellation-name" aria-hidden="true">
+    <span class="cn">向博</span>
+    <span class="en">Xiang Bo</span>
+  </div>
+
+  <a class="orb" href="about.html">
     <span class="orb-in"><span class="orb-card">
       <img src="assets/images/tokyo.jpg" alt="">
       <span class="orb-label" data-i18n="navAbout">关于</span>
     </span></span>
   </a>
 
-  <a class="orb" href="journey.html" style="--x:57%; --y:11%; --d:0.3s; --r:2deg;">
+  <a class="orb" href="journey.html">
     <span class="orb-in"><span class="orb-card">
       <img src="assets/images/nyc.jpg" alt="">
       <span class="orb-label" data-i18n="navJourney">足迹</span>
     </span></span>
   </a>
 
-  <a class="orb" href="essays.html" style="--x:71%; --y:46%; --d:0.45s; --r:-1.5deg;">
+  <a class="orb" href="essays.html">
     <span class="orb-in"><span class="orb-card">
       <img src="assets/images/fuji.jpg" alt="">
       <span class="orb-label" data-i18n="navEssays">随笔</span>
     </span></span>
   </a>
 
-  <a class="orb" href="gallery.html" style="--x:30%; --y:52%; --d:0.6s; --r:1.8deg;">
+  <a class="orb" href="gallery.html">
     <span class="orb-in"><span class="orb-card">
       <img src="assets/gallery/placeholder-6.svg" alt="">
       <span class="orb-label" data-i18n="navGallery">相册</span>
     </span></span>
   </a>
 
-  <a class="orb" href="contact.html" style="--x:13%; --y:68%; --d:0.75s; --r:2.4deg;">
+  <a class="orb" href="contact.html">
     <span class="orb-in"><span class="orb-card">
       <img src="assets/gallery/placeholder-5.svg" alt="">
       <span class="orb-label" data-i18n="navContact">联络</span>

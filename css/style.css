@@ -15,9 +15,32 @@
   --glass: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.12);
   --radius: 18px;
-  --font-zh: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+
+  /* 字体系统：中文标题思源宋体 / 中文正文楷体 / 英文标题 Georgia / 英文正文 Inter Medium */
+  --font-display: Georgia, "Times New Roman", "Noto Serif SC", "Source Han Serif SC",
+    "Source Han Serif CN", "STZhongsong", "SimSun", serif;
+  --font-zh: "KaiTi", "楷体", "STKaiti", "Noto Serif SC", "SimSun", serif;
+  --font-en-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-en-display: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --font-ui: "Inter", "Segoe UI", system-ui, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
   --maxw: 1080px;
+}
+
+/* 自托管 Inter（latin 子集，避免依赖境外 CDN） */
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/inter-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/inter-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,8 +51,27 @@ body {
   font-family: var(--font-zh);
   background: var(--night);
   color: var(--text);
-  line-height: 1.8;
+  line-height: 1.9;
   overflow-x: hidden;
+}
+html[lang="en"] body {
+  font-family: var(--font-en-body);
+  font-weight: 500;
+  line-height: 1.75;
+}
+
+/* 标题类：英文 Georgia + 中文思源宋体（font stack 自动按字符分流） */
+h1, h2, h3, h4,
+.hero-name, .nav-logo, .section-head h2, .page-banner h1,
+.article h1, .timeline-card h3, .care-card h3, .essay-card h3,
+.home-card h3, .home-intro-lead, .contact-email {
+  font-family: var(--font-display);
+}
+
+/* 小型 UI 元素保持无衬线，保证小字号清晰 */
+.nav-links a, .btn, .tag, .orb-label, .essay-tag, .contact-chip,
+.tab, .stat-label, .mobile-menu a, .lang-toggle {
+  font-family: var(--font-ui);
 }
 
 ::selection { background: rgba(255, 138, 92, 0.35); }
@@ -633,24 +675,64 @@ body { animation: pageIn 0.5s ease both; }
 
 .constellation {
   position: fixed; inset: 0;
-  background-size: cover; background-position: center;
   background-color: var(--night);
 }
+/* 背景图独立成层：悬停模块时可整体渐进虚化 */
+.constellation-bg {
+  position: absolute; inset: -3%;
+  background-size: cover; background-position: center;
+  transition: filter 0.7s ease, transform 0.7s ease;
+  will-change: filter;
+}
+.constellation.bg-blur .constellation-bg {
+  filter: blur(10px) brightness(0.82) saturate(1.06);
+  transform: scale(1.045);
+}
 .constellation-veil {
-  position: absolute; inset: 0;
+  position: absolute; inset: 0; z-index: 1;
   background:
     linear-gradient(180deg, rgba(19,21,39,0.34), rgba(19,21,39,0.10) 40%, rgba(19,21,39,0.55) 100%),
     radial-gradient(ellipse at center, transparent 55%, rgba(19,21,39,0.42) 100%);
 }
 
-/* ---------- 模块（拍立得卡片） ---------- */
+/* ---------- 背景超大名字水印 ---------- */
+.constellation-name {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none; user-select: none;
+}
+.constellation-name .cn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: min(30vw, 44vh);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgba(233, 229, 242, 0.09);
+  filter: blur(5px);
+  text-shadow: 0 0 80px rgba(255, 196, 107, 0.10);
+}
+.constellation-name .en {
+  font-family: var(--font-en-display);
+  font-size: min(3.4vw, 4.6vh);
+  letter-spacing: 1.1em;
+  text-indent: 1.1em; /* 抵消末字符字距，保持视觉居中 */
+  text-transform: uppercase;
+  color: rgba(233, 229, 242, 0.15);
+  filter: blur(1px);
+  margin-top: 2.5vh;
+}
+
+/* ---------- 模块（拍立得卡片）：位置由 JS 每次随机生成 ---------- */
 .orb {
-  position: absolute; left: var(--x); top: var(--y);
+  position: absolute; left: 0; top: 0; z-index: 10;
   width: clamp(150px, 16vw, 220px);
   cursor: pointer; text-decoration: none;
+  visibility: hidden; /* JS 定位后显示 */
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform;
 }
+.orb.placed { visibility: visible; }
 .orb:hover, .orb:focus-visible {
   transform: scale(1.16) rotate(0deg);
   z-index: 50;
