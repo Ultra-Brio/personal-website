@@ -789,24 +789,35 @@ body { animation: pageIn 0.5s ease both; }
   to { opacity: 1; translate: 0 0; scale: 1; }
 }
 
-/* ---------- 点击模块的转场 ---------- */
+/* ---------- 点击模块：整屏渐进式失焦转场 ---------- */
 .orb-veil {
   position: fixed; inset: 0; z-index: 1800;
   background: #131527;
   opacity: 0; pointer-events: none;
-  transition: opacity 0.45s ease;
+  transition: opacity 0.7s ease;
 }
-.orb-veil.on { opacity: 1; }
-.orb-launch {
-  position: fixed; z-index: 1900; margin: 0;
-  transition: all 0.5s cubic-bezier(0.65, 0, 0.3, 1);
-  overflow: hidden; border-radius: 6px;
+.orb-veil.on { opacity: 0.62; }
+
+/* 点击后：背景深度虚化、名字浮现、其余卡片淡出 */
+.constellation.defocus .constellation-bg {
+  filter: blur(26px) brightness(0.78) saturate(1.08);
+  transform: scale(1.08);
+  transition-duration: 0.78s;
 }
-.orb-launch .orb-card {
-  transform: none; animation: none;
-  height: 100%; box-shadow: none;
+.constellation.defocus .constellation-name { opacity: 1; }
+.constellation.defocus .orb:not(.defocus-keep) {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.45s ease, transform 0.45s ease;
 }
-.orb-launch img { height: 100%; aspect-ratio: auto; }
+/* 被点击的卡片多留一拍，再轻轻放大淡出 */
+.orb.defocus-keep {
+  opacity: 1 !important;
+  transform: scale(1.14);
+  transition: opacity 0.55s ease 0.22s, transform 0.78s cubic-bezier(0.3, 0, 0.2, 1) !important;
+  z-index: 60;
+}
+.constellation.defocus .orb.defocus-keep { opacity: 0; }
 
 /* ---------- 移动端：星座退化为网格 ---------- */
 @media (max-width: 760px) {

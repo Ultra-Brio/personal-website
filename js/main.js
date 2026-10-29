@@ -222,7 +222,7 @@
     });
   }
 
-  /* ================= 首页星座导航：点击模块的转场 ================= */
+  /* ================= 首页星座导航：点击模块 → 渐进式失焦转场 ================= */
   const orbs = document.querySelectorAll(".orb");
   const orbVeil = document.getElementById("orbVeil");
   if (orbs.length && orbVeil) {
@@ -230,20 +230,11 @@
       orb.addEventListener("click", (e) => {
         e.preventDefault();
         const url = orb.getAttribute("href");
-        const r = orb.getBoundingClientRect();
-        const clone = orb.cloneNode(true);
-        clone.className = "orb-launch";
-        clone.removeAttribute("href");
-        Object.assign(clone.style, {
-          left: r.left + "px", top: r.top + "px",
-          width: r.width + "px", height: r.height + "px",
-        });
-        document.body.appendChild(clone);
+        // 渐进式模糊：背景深度虚化 + 名字浮现 + 被点卡片留一拍后淡出
+        orb.classList.add("defocus-keep");
+        if (constellation) constellation.classList.add("defocus");
         orbVeil.classList.add("on");
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          Object.assign(clone.style, { left: "0px", top: "0px", width: "100vw", height: "100vh" });
-        }));
-        setTimeout(() => { window.location.href = url; }, 560);
+        setTimeout(() => { window.location.href = url; }, 820);
       });
     });
   }
