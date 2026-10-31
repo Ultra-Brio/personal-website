@@ -122,6 +122,8 @@ function Lift({ g, W, H }: { g: LightGeo; W: number; H: number }) {
 
 /**
  * `cast`: draw the still window bar and twig too (the fallback desk; on the 3D desk the engine casts them). `day`: the daybreak.
+ * The desk's own backdrop is the person's photo (the homepage's 大图), set inline so the URL stays document-relative and works
+ * at a domain root and under a sub-path; the CSS keeps 朝霧 as what shows while it loads.
  */
 export function Room({ day, cast }: { day: number; cast: boolean }) {
   const f = useFrame();
@@ -130,6 +132,7 @@ export function Room({ day, cast }: { day: number; cast: boolean }) {
   return (
     <div className="room" data-lit={day >= 1 || undefined} style={style} aria-hidden="true">
       <div className="desk">
+        <i className="bg-photo" style={{ backgroundImage: "url(photos/home-bg.jpg)" }} />
         <i className="fl fl-a" />
         <i className="fl fl-b" />
         <i className="fl fl-c" />

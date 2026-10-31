@@ -4,7 +4,7 @@ import type { CoverMaterial } from "../book/cover";
 import { hanLangOf, profileHan, type HanLang } from "../fonts";
 import { langName } from "../profile/folio";
 import type { Profile } from "../profile/schema";
-import { BOOKLETS, booklet, caseHex, countOf, MATERIALS } from "./booklets";
+import { booklet, caseHex, countOf, MATERIALS } from "./booklets";
 import { emailOf, writeClipboard } from "./ContactRows";
 import { hasHan, run, textProps, useFontRuns } from "./fonts";
 import { useT, type Dict } from "./i18n";
@@ -184,53 +184,42 @@ export function Identity({ profile, han, onProfile, asHeading = true }: { profil
   );
 }
 
-/* ------------------------------------------------------------------ 目次 the booklets */
-function Toc({ profile, tab, onTab }: { profile: Profile; tab: Tab; onTab(t: Tab): void }) {
+/* ------------------------------------------------------------------ 目次 the site's pages */
+function Toc() {
   const t = useT();
   const refs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const index = BOOKLETS.findIndex((b) => b.id === tab);
-  useFontRuns(run("serif", 400, t.lang === "zh" ? "zh-Hans" : "ja", ...BOOKLETS.map((b) => t.booklet[b.id].name)));
+  const modules = t.site.modules;
+  useFontRuns(run("serif", 400, t.lang === "zh" ? "zh-Hans" : "ja", ...modules.map((m) => m.name)));
   const onKey = (e: ReactKeyboardEvent<HTMLElement>) => {
     const d = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
     if (!d) return;
     const i = refs.current.findIndex((r) => r === document.activeElement);
     if (i < 0) return;
     e.preventDefault();
-    refs.current[(i + d + BOOKLETS.length) % BOOKLETS.length]?.focus();
+    refs.current[(i + d + modules.length) % modules.length]?.focus();
   };
   return (
-    <nav className="toc" aria-label={t.nav.booklets} onKeyDown={onKey} style={{ "--i": index } as CSSProperties}>
-      <i className="toc-disc" aria-hidden="true" />
+    <nav className="toc" aria-label={t.site.label} onKeyDown={onKey}>
       <ol>
-        {BOOKLETS.map((b, i) => {
-          const n = countOf(profile, b.id);
-          const name = t.booklet[b.id].name;
-          return (
-            <li key={b.id}>
-              <a
-                ref={(el) => {
-                  refs.current[i] = el;
-                }}
-                href={`#${b.id}`}
-                aria-current={tab === b.id ? "page" : undefined}
-                aria-label={`${name}, ${pad2(n)} ${t.booklet[b.id].noun(n)}`}
-                onClick={(e) => {
-                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-                  e.preventDefault();
-                  onTab(b.id);
-                }}
-              >
-                <span className="nm" aria-hidden="true">
-                  {name}
-                </span>
-                <span className="lead" aria-hidden="true" />
-                <span className="n" aria-hidden="true">
-                  {pad2(n)}
-                </span>
-              </a>
-            </li>
-          );
-        })}
+        {modules.map((m, i) => (
+          <li key={m.href}>
+            <a
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              href={m.href}
+              aria-label={m.name}
+            >
+              <span className="nm" aria-hidden="true">
+                {m.name}
+              </span>
+              <span className="lead" aria-hidden="true" />
+              <span className="n" aria-hidden="true">
+                {pad2(i + 1)}
+              </span>
+            </a>
+          </li>
+        ))}
       </ol>
     </nav>
   );
@@ -776,7 +765,7 @@ export function Shell({ profile, langs, fade = null, tab, next, printed = false,
                 {profile.bio}
               </p>
             ) : null}
-            <Toc profile={profile} tab={shown} onTab={onTab} />
+            <Toc />
             {land ? <LangSwitch langs={langs} han={han} tab={tab} /> : null}
             {!compact ? (
               <CrossFade k={handling} className="handling" ms={300}>

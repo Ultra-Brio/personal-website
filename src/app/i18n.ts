@@ -19,6 +19,8 @@ export type Dict = {
   /** <html lang> for the chrome */
   htmlLang: string;
   booklet: Record<Tab, { name: string; local: string; latin: string; noun: (n: number) => string }>;
+  /** The site's own five pages (the 目次 lists them; the pouch's things link to them, one to one). */
+  site: { label: string; suffix: string; modules: { name: string; href: string }[] };
   nav: { booklets: string; skip: string };
   /** the language switch (each language is named in itself: English · 中文) */
   langs: { label: string };
@@ -69,7 +71,7 @@ export type Dict = {
     name: string; role: string; event: string; talk: string; date: string; time: string; venue: string; city: string; seat: string; serial: string;
     caption: string; place: string; from: string; colour: string; series: string; seriesValue: string; postmarked: string; credit: string; pages: string;
   };
-  detail: { pdf: string; download: string; text: string; readAsText: string; links: string; story: string; turned: string; downloadAria: string };
+  detail: { pdf: string; download: string; text: string; readAsText: string; links: string; story: string; turned: string; downloadAria: string; page: string };
   hagaki: string;
   text: {
     hashira: { local: string; latin: string };
@@ -123,9 +125,20 @@ export const en: Dict = {
     resume: { name: "Résumé", local: "履歴書", latin: "Résumé folio", noun: (n) => (n === 1 ? "thing" : "things") },
   },
   nav: { booklets: "Booklets", skip: "Skip to the booklet" },
+  site: {
+    label: "Pages",
+    suffix: "Personal site",
+    modules: [
+      { name: "About", href: "about.html" },
+      { name: "Journey", href: "journey.html" },
+      { name: "Essays", href: "essays.html" },
+      { name: "Gallery", href: "gallery.html" },
+      { name: "Contact", href: "contact.html" },
+    ],
+  },
   langs: { label: "Language" },
   handling: {
-    resume: "Tilt the desk and the things inside will slide. Lift one out to read it.",
+    resume: "Tilt the desk and the things inside will slide. Lift one to read it, then step into its page.",
     cards: "Turn a page by its edge, or with the arrow keys. Lift a card out to look closer.",
     postcards: (n) => `${cap(enWord(n))} places, ${enWord(n)} mornings. Turn the page to read the backs.`,
     closed: "Click the cover to open it.",
@@ -180,7 +193,7 @@ export const en: Dict = {
     name: "Name", role: "Role", event: "Event", talk: "Talk", date: "Date", time: "Doors", venue: "Venue", city: "City", seat: "Seat", serial: "Ticket",
     caption: "Caption", place: "Place", from: "From", colour: "Colour", series: "Series", seriesValue: "色見本", postmarked: "Postmarked", credit: "Photo", pages: "Pages",
   },
-  detail: { pdf: "PDF", download: "Download", text: "Text", readAsText: "Read as text", links: "Links", story: "Story", turned: "The back", downloadAria: "Download the résumé as a PDF" },
+  detail: { pdf: "PDF", download: "Download", text: "Text", readAsText: "Read as text", links: "Links", story: "Story", turned: "The back", downloadAria: "Download the résumé as a PDF", page: "Open the page" },
   hagaki: "郵便はがき",
   text: {
     hashira: { local: "本文", latin: "Text" },
@@ -217,15 +230,26 @@ export const zh: Dict = {
     resume: { name: "简历", local: "简历", latin: "Résumé folio", noun: () => "件东西" },
   },
   nav: { booklets: "册子", skip: "跳到册子" },
+  site: {
+    label: "页面",
+    suffix: "个人主页",
+    modules: [
+      { name: "关于", href: "about.html" },
+      { name: "足迹", href: "journey.html" },
+      { name: "随笔", href: "essays.html" },
+      { name: "相册", href: "gallery.html" },
+      { name: "联络", href: "contact.html" },
+    ],
+  },
   langs: { label: "语言" },
   handling: {
-    resume: "倾斜桌面，袋里的东西会随之滑动。取出一件，就能细看。",
+    resume: "倾斜桌面，袋里的东西会随之滑动。取起一件，细看之后再进它对应的那一页。",
     cards: "拖动页边或用方向键翻页。取出一张卡片，可以看得更近。",
     postcards: (n) => `${zhNum(n)}个地方，${zhNum(n)}个清晨。翻过这一页，读它们的背面。`,
     closed: "点一下封面，把它打开。",
     printed: "这张桌面需要 WebGL，下面是印刷版。",
   },
-  hint: { resume: "倾斜手机，或取出一件东西。", cards: "滑动翻页，轻点卡片取出。", postcards: "滑动翻页，轻点明信片取出。", closed: "点一下封面，把它打开。" },
+  hint: { resume: "倾斜手机，或取起一件东西。", cards: "滑动翻页，轻点卡片取出。", postcards: "滑动翻页，轻点明信片取出。", closed: "点一下封面，把它打开。" },
   clock: (time, city) => `${city ? `${city}` : ""}当地时间 ${time}`,
   controls: {
     open: "打开",
@@ -276,7 +300,7 @@ export const zh: Dict = {
     name: "姓名", role: "职位", event: "活动", talk: "演讲", date: "日期", time: "入场", venue: "场馆", city: "城市", seat: "座位", serial: "票号",
     caption: "题字", place: "地点", from: "寄自", colour: "色值", series: "系列", seriesValue: "传统色", postmarked: "邮戳", credit: "摄影", pages: "页数",
   },
-  detail: { pdf: "PDF", download: "下载", text: "文字", readAsText: "以文字阅读", links: "链接", story: "故事", turned: "背面", downloadAria: "下载 PDF 版简历" },
+  detail: { pdf: "PDF", download: "下载", text: "文字", readAsText: "以文字阅读", links: "链接", story: "故事", turned: "背面", downloadAria: "下载 PDF 版简历", page: "进入那一页" },
   // the card stock is printed in Japan: the same 郵便はがき as on the 3D album's back film (set lang ja)
   hagaki: "郵便はがき",
   text: {

@@ -62,6 +62,15 @@ dialog.lb[data-closing] .lb-obj { translate: 0 10px; transition: translate .3s v
 .lb-specs .v { font: inherit; color: var(--sumi); }
 .cap-links { display: grid; }
 .cap-links a { display: inline-flex; align-items: baseline; gap: calc(2 * var(--u)); min-height: calc(32 * var(--u)); padding-block: calc(6 * var(--u)); font: var(--gw5) calc(12.5 * var(--u))/calc(20 * var(--u)) var(--gothic); letter-spacing: .04em; color: var(--sumi); }
+/* the thing's own page, set like the 目次's rows: the name, the dotted lead, the arrow */
+.cap-go { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; column-gap: calc(10 * var(--u)); min-height: calc(36 * var(--u)); margin-block: calc(10 * var(--u)) calc(2 * var(--u)); color: var(--sumi); }
+.cap-go .nm { font: 400 calc(16 * var(--u))/calc(36 * var(--u)) var(--mincho); letter-spacing: .01em; white-space: nowrap; }
+.cap-go .lead { align-self: end; height: 1px; margin-bottom: calc(12 * var(--u)); background-image: radial-gradient(circle, var(--usuzumi) .6px, transparent .9px); background-size: calc(5 * var(--u)) 1px; background-repeat: repeat-x; opacity: .8; }
+.cap-go .go { font: var(--gw4) calc(12 * var(--u))/calc(20 * var(--u)) var(--gothic); color: var(--ainezu); }
+@media (hover: hover) and (pointer: fine) {
+  .cap-go:hover { color: var(--ai); }
+  .cap-go:hover .lead { background: var(--ai); background-image: none; opacity: .5; }
+}
 /* the actions at the column's foot, set like the colophon (its bottom hairline on the page's bottom line) */
 .lb-acts { flex: none; padding-bottom: var(--row); }
 .lb-act-rows { display: grid; padding: calc(6 * var(--u)) 0; border-top: 1px solid var(--shironezu); border-bottom: 1px solid var(--shironezu); }

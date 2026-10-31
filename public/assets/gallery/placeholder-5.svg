@@ -1,49 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="620" viewBox="0 0 800 620">
-  <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1d1f38"/>
-      <stop offset="0.55" stop-color="#4a3f66"/>
-      <stop offset="0.82" stop-color="#a05c54"/>
-      <stop offset="1" stop-color="#ff9d5c"/>
-    </linearGradient>
-    <linearGradient id="bld" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#141527"/>
-      <stop offset="1" stop-color="#0d0e1d"/>
-    </linearGradient>
-  </defs>
-  <rect width="800" height="620" fill="url(#sky)"/>
-  <g fill="#ffd9a8" opacity="0.7">
-    <circle cx="207" cy="135" r="1.2"/>
-    <circle cx="137" cy="136" r="1.2"/>
-    <circle cx="686" cy="54" r="1.2"/>
-    <circle cx="347" cy="40" r="1.2"/>
-    <circle cx="115" cy="98" r="1.2"/>
-    <circle cx="322" cy="127" r="1.2"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#f8f9f7"/>
+  <rect x="14" y="14" width="772" height="972" fill="none" stroke="#c2cbd2" stroke-width="3" stroke-dasharray="14 12" stroke-linecap="round"/>
+  <g fill="#8e9aa4" text-anchor="middle">
+    <text x="400" y="470" font-size="64" font-family="'Noto Serif SC','Songti SC','SimSun',serif">&#10047;</text>
+    <text x="400" y="560" font-size="40" letter-spacing="10" font-family="'Noto Serif SC','Songti SC','SimSun',serif">照片待放</text>
+    <text x="400" y="622" font-size="24" font-family="'Zen Kaku Gothic New','PingFang SC','Microsoft YaHei',sans-serif">把照片按序号放进 assets/gallery/ 即会显示</text>
   </g>
-  <g fill="url(#bld)">
-    <rect x="0" y="483" width="86" height="137"/>
-    <rect x="95" y="498" width="83" height="122"/>
-    <rect x="191" y="491" width="129" height="129"/>
-    <rect x="336" y="453" width="104" height="167"/>
-    <rect x="453" y="466" width="79" height="154"/>
-    <rect x="549" y="432" width="94" height="188"/>
-    <rect x="653" y="445" width="128" height="175"/>
-    <rect x="789" y="508" width="72" height="112"/>
-  </g>
-  <g fill="#ffc46b" opacity="0.85">
-    <rect x="340" y="585" width="3" height="4"/>
-    <rect x="177" y="569" width="3" height="4"/>
-    <rect x="531" y="570" width="3" height="4"/>
-    <rect x="313" y="596" width="3" height="4"/>
-    <rect x="196" y="545" width="3" height="4"/>
-    <rect x="458" y="565" width="3" height="4"/>
-    <rect x="370" y="557" width="3" height="4"/>
-    <rect x="265" y="561" width="3" height="4"/>
-    <rect x="39" y="599" width="3" height="4"/>
-    <rect x="608" y="596" width="3" height="4"/>
-  </g>
-  <text x="50%" y="310" text-anchor="middle" fill="#e9e5f2" font-family="Georgia, serif"
-        font-size="30" letter-spacing="6" opacity="0.9">Yangtze River</text>
-  <text x="50%" y="346" text-anchor="middle" fill="#ffc46b" font-family="sans-serif"
-        font-size="16" letter-spacing="4" opacity="0.8">长江 · 志愿</text>
 </svg>

@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-i18n="pageTitle">向博 · 个人主页</title>
+<meta name="description" content="向博的随笔与想法：写作、公益、金融市场与观察，慢慢写，慢慢放。">
+<meta property="og:title" content="随笔 · 向博">
+<meta property="og:description" content="向博的随笔与想法：写作、公益、金融市场与观察，慢慢写，慢慢放。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/assets/images/banner-essays.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
@@ -68,7 +74,11 @@
   const list = document.getElementById("essayList");
   function render(items) {
     if (!items.length) {
-      list.innerHTML = '<p class="essays-empty">第一篇正在路上。</p>';
+      list.innerHTML = `<div class="empty-state">
+        <div class="glyph">✎</div>
+        <h3>第一篇随笔正在路上</h3>
+        <p>写好后会出现在这里。你也可以常回来看看。</p>
+      </div>`;
       return;
     }
     list.innerHTML = items.map((e) => `

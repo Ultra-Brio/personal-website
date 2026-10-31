@@ -28,6 +28,7 @@
     });
     if (document.getElementById("typingText")) startTyping();
     if (document.getElementById("essayList") && typeof ESSAYS !== "undefined") renderEssays();
+    initMotto();
   }
 
   const langToggle = document.getElementById("langToggle");
@@ -75,10 +76,18 @@
 
   const burger = document.getElementById("navBurger");
   const mobileMenu = document.getElementById("mobileMenu");
+  const setMenu = (open) => {
+    mobileMenu.classList.toggle("open", open);
+    burger.closest(".nav").classList.toggle("menu-open", open);
+    document.body.classList.toggle("menu-open", open);
+  };
   if (burger) {
-    burger.addEventListener("click", () => mobileMenu.classList.toggle("open"));
+    burger.addEventListener("click", () => setMenu(!mobileMenu.classList.contains("open")));
     mobileMenu.querySelectorAll("a").forEach((a) =>
-      a.addEventListener("click", () => mobileMenu.classList.remove("open")));
+      a.addEventListener("click", () => setMenu(false)));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && mobileMenu.classList.contains("open")) setMenu(false);
+    });
   }
   // 高亮当前页
   const page = document.body.getAttribute("data-page");
@@ -120,6 +129,27 @@
     });
   }, { threshold: 0.12 });
   document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+  /* ================= 逐字点亮（关于页「生于此，归于斯」） ================= */
+  const motto = document.getElementById("motto");
+  function initMotto() {
+    if (!motto) return;
+    const lit = motto.dataset.lit === "1";
+    const text = motto.textContent.trim();
+    motto.innerHTML = text.split("").map((c) => `<span class="w">${c === " " ? " " : c}</span>`).join("");
+    const words = motto.querySelectorAll(".w");
+    if (lit) { words.forEach((s) => s.classList.add("on")); return; }
+    const ioMotto = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        words.forEach((s, i) => setTimeout(() => s.classList.add("on"), i * 55));
+        motto.dataset.lit = "1";
+        ioMotto.disconnect();
+      });
+    }, { threshold: 0.5 });
+    ioMotto.observe(motto);
+  }
+  initMotto();
 
   /* ================= 足迹筛选（仅足迹页） ================= */
   const tabs = document.querySelectorAll(".tab");

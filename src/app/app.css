@@ -106,7 +106,9 @@ time, .n, .ct, .yr, .cap-count, .tk-day { font-variant-numeric: tabular-nums; }
 /* nothing above the canvas, no animation: the window light on the 3D desk is the engine's (Room.tsx). The blend modes stay inside
    the desk (contain: strict isolates it), so they are worked out once, when it is painted */
 .room { display: contents; }
-.desk { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: url("/photos/home-bg.jpg") center / cover no-repeat, var(--asagiri); contain: strict; }
+.desk { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: var(--asagiri); contain: strict; }
+/* the homepage's 大图 (Room.tsx sets the document-relative url): under the paper gauze, the fibres and the window light */
+.desk .bg-photo { position: absolute; inset: 0; background-position: center; background-size: cover; background-repeat: no-repeat; }
 .desk > svg, .desk > .falloff, .desk > .tooth { position: absolute; inset: 0; width: 100%; height: 100%; }
 .desk .fl { position: absolute; inset: -50%; background-repeat: repeat; }
 /* washi fibres (A's recipe): white flecks and strands, one faint dark fleck */

@@ -6,12 +6,12 @@ import type { Dict } from "./i18n";
 import { TAB_IDS, type Tab } from "./types";
 
 /*
- * The three booklets on the desk (spec §2.4): each case's colour and foil are fixed per booklet (the material is the visitor's
- * choice, remembered per booklet); the words for them (names, local titles, handling lines) live in i18n.ts.
+ * The booklet on the desk: the résumé folio (its case's colour and foil are fixed; the material is the visitor's choice,
+ * remembered). The card and postcard albums keep their specs here and in src/book for the day their pictures are chosen;
+ * the words for them (names, local titles, handling lines) live in i18n.ts.
+ *   Résumé     藍鉄 aitetsu, silver foil, frosted PP
  *   Cards      青磁 seiji,   silver foil, leather; 2 × 4 card pockets a side
  *   Postcards  銀鼠 ginnezu, blind stamp, cloth; 2 × 3 A6 pockets a side
- *   Résumé     藍鉄 aitetsu, silver foil, frosted PP (owner 2026-10-23: the résumé folio in frost, the albums in the others)
- * The albums' pages are tall (brief r3 D3): an open spread of 2 × 3 cards or 2 × 2 postcards is so wide that it is small on a desk.
  */
 
 export type Booklet = {
@@ -27,15 +27,15 @@ export type Booklet = {
 };
 
 export const BOOKLETS: readonly Booklet[] = [
+  { id: "resume", color: "aitetsu", foil: "silver", material: "frost", local: "履歴書" },
   { id: "cards", color: "seiji", foil: "silver", material: "leather", local: "カード帖", layout: "idCard2x4" },
   { id: "postcards", color: "ginnezu", foil: "blind", material: "cloth", local: "絵葉書", layout: "postcard2x3" },
-  { id: "resume", color: "aitetsu", foil: "silver", material: "frost", local: "履歴書" },
 ];
 
 /** The local name of each pouch kind (the English page's; a Chinese page uses i18n's `held`). */
 export const LOCAL_KIND: Record<ItemKind, string> = { card: "名刺", resume: "履歴書", ticket: "入場券", polaroid: "写真", note: "一筆箋" };
 
-export const booklet = (id: Tab): Booklet => BOOKLETS.find((b) => b.id === id) ?? BOOKLETS[2]!;
+export const booklet = (id: Tab): Booklet => BOOKLETS.find((b) => b.id === id) ?? BOOKLETS[0]!;
 
 /** How many things a booklet holds (the count after its name). */
 export function countOf(profile: Profile, id: Tab): number {

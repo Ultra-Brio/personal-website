@@ -1,15 +1,14 @@
 import type { Folio } from "../src/profile/folio";
-import { profile } from "./en";
 
 /*
- * Your page's content: this folder and the pictures in public/photos are all you need to change (README, "Make it yours").
- * The demo is one persona in two languages: English (en.ts, in the entry chunk) and Simplified Chinese (zh.ts, its own chunk,
- * fetched the first time a visitor picks 中文 or arrives with ?lang=zh). One language only: export
- * `{ primary: "en", profiles: { en: profile } }` and delete zh.ts; the page then shows no language switch.
+ * The page's content: this folder and the pictures in public/photos are all you need to change (README, "Make it yours").
+ * 向博 in two languages, like his own site's 中 / EN switch: Chinese first (zh.ts), English (en.ts) loaded the first time a
+ * visitor picks English or arrives with ?lang=en. One language only: drop the other line here; the switch then disappears.
  */
 export const folio: Folio = {
   primary: "zh",
   profiles: {
     zh: () => import("./zh").then((m) => m.profileZh),
+    en: () => import("./en").then((m) => m.profile),
   },
 };

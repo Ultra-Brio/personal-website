@@ -13,7 +13,7 @@ import { ResumePages } from "./ResumeBook";
 import { Pager, Sep, Word } from "./Shell";
 import { play } from "./sound";
 import type { Snapshot, Still } from "./types";
-import { NE_ARROW, isExternal, linkText, pad2, pageUrl, prefersReducedMotion, specRows } from "./util";
+import { NE_ARROW, isExternal, pad2, pageUrl, prefersReducedMotion, specRows } from "./util";
 
 /*
  * The detail view of one pouch object (§1.6.10, brief O2): the object large in the book box, the caption in the words column
@@ -377,7 +377,7 @@ export function ItemDetail({ profile, index, onIndex, onClose, fallbackFocus, sn
           ...run("sans", 400, han, item.story, ...specRows(item, t).map((r) => r.v)),
           ...run("sans", 500, han, ...specRows(item, t).map((r) => r.k)),
           ...run("serif", 400, t.lang === "zh" ? "zh-Hans" : "ja", local),
-          ...run("sans", 500, han, ...(item.links ?? []).map((l) => l.label)),
+          ...run("sans", 500, han, ...(item.links ?? []).map((l) => l.label), item.href ? t.detail.page : ""),
         ]
       : [],
   );
@@ -401,7 +401,9 @@ export function ItemDetail({ profile, index, onIndex, onClose, fallbackFocus, sn
   const space = item.kind === "card" ? () => (ctl?.page === 1 ? ctl.prev() : ctl?.next()) : item.kind === "ticket" || item.kind === "polaroid" ? turn : undefined;
 
   const rows = itemRows(item, t);
-  const links = [...(item.links ?? []), ...(item.href ? [{ label: linkText(item.href), href: item.href }] : [])];
+  // the thing's own page is the caption's entry row (cap-go); any further links stay a plain list
+  const pageLabel = item.href ? ((item.links ?? []).find((l) => l.href === item.href)?.label ?? t.detail.page) : "";
+  const links = (item.links ?? []).filter((l) => l.href !== item.href);
   const atStart = index === 0 && (!resume || !ctl || ctl.page <= 0);
   const atEnd = index === n - 1 && (!resume || !ctl || ctl.page >= ctl.count - 1);
   const pagerText = resume && ctl ? (phone ? `${ctl.first} / ${ctl.total}` : t.controls.pages(ctl.first, ctl.last)) : `${index + 1} / ${n}`;
@@ -467,6 +469,17 @@ export function ItemDetail({ profile, index, onIndex, onClose, fallbackFocus, sn
         <p className="cap-story" {...textProps(item.story, profile.lang, han)}>
           {item.story}
         </p>
+      ) : null}
+      {item.href ? (
+        <a className="cap-go" href={item.href}>
+          <span className="nm" {...textProps(pageLabel, profile.lang, han)}>
+            {pageLabel}
+          </span>
+          <span className="lead" aria-hidden="true" />
+          <span className="go" aria-hidden="true">
+            →
+          </span>
+        </a>
       ) : null}
       <SpecRows rows={rows.map((r) => withLang(r, profile.lang, han))} />
       {links.length ? (

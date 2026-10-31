@@ -4,9 +4,9 @@ import type { BookLabels } from "../book/labels";
 import type { Profile } from "../profile/schema";
 import type { Insets } from "./layout";
 
-/** The three booklets on the desk. */
+/** The desk holds the résumé folio (the two albums stay in the code for when their pictures are chosen). */
 export type Tab = "cards" | "postcards" | "resume";
-export const TAB_IDS: readonly Tab[] = ["cards", "postcards", "resume"];
+export const TAB_IDS: readonly Tab[] = ["resume"];
 /** ?view= : the 3D desk (default), the text version, or the machine-readable JSON. */
 export type View = "folio" | "text" | "json";
 export const DEFAULT_TAB: Tab = "resume";

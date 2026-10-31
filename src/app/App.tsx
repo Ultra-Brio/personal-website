@@ -16,7 +16,7 @@ import { play, soundKit, useMuted } from "./sound";
 import { StagePlaceholder } from "./StagePlaceholder";
 import { STAGES } from "./stages";
 import { DEFAULT_TAB, TAB_IDS, type Detail, type Langs, type StageApi, type StageMap, type StageProps, type Tab, type View } from "./types";
-import { findItem, prefersReducedMotion, storeLang, typingTarget, writeUrlLang } from "./util";
+import { findItem, pad2, prefersReducedMotion, storeLang, typingTarget, writeUrlLang } from "./util";
 
 export type { StageProps, StageMap, Tab } from "./types";
 export type AppProps = {
@@ -299,6 +299,7 @@ export function App({ profile: firstProfile = sample, folio, lang: firstLang, st
 
   const onPickItem = useCallback(
     (id: string) => {
+      // template behaviour: the thing lifts into its detail view; the page entry lives on the detail card (item.href)
       if (findItem(profile, id)) setDetail({ type: "item", id });
     },
     [profile],
@@ -449,7 +450,16 @@ export function App({ profile: firstProfile = sample, folio, lang: firstLang, st
         hint={hint}
         day={dawn.day}
         loading={view === "folio" && !ready && !leaving ? { label: tab === "resume" ? t.loading.folio : t.loading.album, progress: dawn.progress } : null}
-        {...(view !== "folio" ? { hashira: { local: t.text.hashira.local, latin: t.text.hashira.latin, han: chromeHan } } : {})}
+        {...(view !== "folio"
+          ? { hashira: { local: t.text.hashira.local, latin: t.text.hashira.latin, han: chromeHan } }
+          : {
+              hashira: {
+                // the site's own running title: 向博 · 个人主页, with the count of things in the pouch as the folio number
+                local: `${profile.nameLocal ?? profile.name} · ${t.site.suffix}`,
+                latin: `${profile.name} · ${pad2(profile.items.length)}`,
+                han: chromeHan,
+              },
+            })}
       >
         {body}
       </Shell>
