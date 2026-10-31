@@ -1,0 +1,39 @@
+# Pages CMS 配置 —— 内容后台（https://pagescms.org）
+# 用法：打开 pagescms.org → 用 GitHub 登录 → 选择 Ultra-Brio/personal-website 仓库 → 直接写随笔、传图片。
+# 保存即自动 commit，Cloudflare Pages 自动重新部署，全程不碰代码。
+
+media:
+  input: public/assets/uploads
+  output: /assets/uploads
+
+content:
+  - name: essays
+    label: 随笔
+    type: collection
+    path: public/content/essays
+    view:
+      fields: [title, date, tag]
+      primary: title
+      sortby: date
+      sort: desc
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: date
+        label: 日期
+        type: date
+        required: true
+      - name: tag
+        label: 标签
+        type: select
+        options:
+          values: [随笔, 想法, 读书, 旅行, 记录]
+      - name: excerpt
+        label: 摘要
+        type: string
+        description: 显示在随笔列表卡片上的一句话
+      - name: body
+        label: 正文
+        type: rich-text
