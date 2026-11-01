@@ -1,12 +1,21 @@
 # Pages CMS 配置 —— 内容后台（https://pagescms.org）
-# 用法：打开 pagescms.org → 用 GitHub 登录 → 选择 Ultra-Brio/personal-website 仓库 → 直接写随笔、传图片。
+# 用法：打开 pagescms.org → 用 GitHub 登录 → 选择 Ultra-Brio/personal-website 仓库 → 直接改全站文字与图片。
 # 保存即自动 commit，Cloudflare Pages 自动重新部署，全程不碰代码。
+# 注意：content 里的每个键都映射为表单字段（Pages CMS 保存未映射的键可能丢失），新增字段时记得同步这里。
 
 media:
-  input: public/assets/uploads
-  output: /assets/uploads
+  - name: uploads
+    input: public/assets/uploads
+    output: /assets/uploads
+  - name: gallery
+    input: public/assets/gallery
+    output: /assets/gallery
+  - name: images
+    input: public/assets/images
+    output: /assets/images
 
 content:
+  # ---------- 随笔（public/content/essays/*.md → 构建时生成列表） ----------
   - name: essays
     label: 随笔
     type: collection
@@ -37,3 +46,163 @@ content:
       - name: body
         label: 正文
         type: rich-text
+
+  # ---------- 站点信息（联络页 + 各页页脚位置行） ----------
+  - name: site
+    label: 站点信息（邮箱 / GitHub / 坐标）
+    type: file
+    path: public/content/site.json
+    format: json
+    fields:
+      - name: email
+        label: 邮箱
+        type: string
+        required: true
+      - name: github
+        label: GitHub 主页链接
+        type: string
+      - name: locationZh
+        label: 坐标（中文）
+        type: string
+      - name: locationEn
+        label: 坐标（英文）
+        type: string
+      - name: footerZh
+        label: 页脚一句话（中文）
+        type: string
+      - name: footerEn
+        label: 页脚一句话（英文）
+        type: string
+
+  # ---------- 关于页 ----------
+  - name: about
+    label: 关于页（自我介绍 / 关心的事 / 逐字点亮）
+    type: file
+    path: public/content/about.json
+    format: json
+    fields:
+      - name: leadZh
+        label: 开场（中文）
+        type: text
+      - name: leadEn
+        label: 开场（英文）
+        type: text
+      - name: p1Zh
+        label: 第二段（中文）
+        type: text
+      - name: p1En
+        label: 第二段（英文）
+        type: text
+      - name: p2Zh
+        label: 第三段（中文）
+        type: text
+      - name: p2En
+        label: 第三段（英文）
+        type: text
+      - name: tags
+        label: 关键词标签
+        type: object
+        list:
+          collapsible:
+            summary: "{zh}"
+        fields:
+          - name: zh
+            label: 中文
+            type: string
+          - name: en
+            label: 英文
+            type: string
+      - name: cares
+        label: 我关心的事（四张卡）
+        type: object
+        list:
+          collapsible:
+            summary: "{titleZh}"
+        fields:
+          - name: titleZh
+            label: 标题（中文）
+            type: string
+          - name: titleEn
+            label: 标题（英文）
+            type: string
+          - name: descZh
+            label: 描述（中文）
+            type: text
+          - name: descEn
+            label: 描述（英文）
+            type: text
+      - name: mottoZh
+        label: 逐字点亮段落（中文）
+        type: text
+      - name: mottoEn
+        label: 逐字点亮段落（英文）
+        type: text
+      - name: mottoSrcZh
+        label: 落款（中文）
+        type: string
+      - name: mottoSrcEn
+        label: 落款（英文）
+        type: string
+
+  # ---------- 足迹页（时间线） ----------
+  - name: journey
+    label: 足迹（时间线）
+    type: file
+    path: public/content/journey.json
+    format: json
+    fields:
+      - name: items
+        label: 经历条目
+        type: object
+        list:
+          collapsible:
+            summary: "{titleZh}（{date}）"
+        fields:
+          - name: date
+            label: 时间
+            type: string
+            description: 如 2026.06 – 08
+          - name: cat
+            label: 分类
+            type: select
+            options:
+              values: [biz, campus, public]
+          - name: titleZh
+            label: 标题（中文）
+            type: string
+          - name: titleEn
+            label: 标题（英文）
+            type: string
+          - name: descZh
+            label: 描述（中文）
+            type: text
+          - name: descEn
+            label: 描述（英文）
+            type: text
+
+  # ---------- 相册页（九宫格） ----------
+  - name: gallery
+    label: 相册（照片与图注）
+    type: file
+    path: public/content/gallery.json
+    format: json
+    fields:
+      - name: items
+        label: 照片槽位
+        type: object
+        list:
+          collapsible:
+            summary: "{captionZh}"
+        fields:
+          - name: image
+            label: 照片
+            type: image
+            options:
+              media: gallery
+              extensions: [jpg, jpeg, png, webp]
+          - name: captionZh
+            label: 图注（中文）
+            type: string
+          - name: captionEn
+            label: 图注（英文）
+            type: string

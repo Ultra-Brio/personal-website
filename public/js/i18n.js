@@ -82,7 +82,7 @@ const I18N = {
     contactLead: "无论是交流投研、医学、公益，还是单纯想聊聊——欢迎写信给我。",
     contactEmailLabel: "邮箱",
     contactOtherLabel: "其他",
-    contactNote: "以上联系方式统一在 js/config.js 里修改，全站自动更新。",
+    contactNote: "以上联系方式在后台「站点信息」里修改，全站自动更新。",
   },
 
   en: {
@@ -157,6 +157,6 @@ const I18N = {
     contactLead: "Whether about finance, medicine, volunteering, or just a chat — feel free to write to me.",
     contactEmailLabel: "Email",
     contactOtherLabel: "Elsewhere",
-    contactNote: "All contact info is edited in one place: js/config.js, and updates site-wide.",
+    contactNote: "All contact info is edited in the CMS (Site info), and updates site-wide.",
   },
 };

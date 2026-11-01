@@ -1,0 +1,13 @@
+{
+  "items": [
+    { "image": "assets/gallery/photo-01.jpg", "captionZh": "乡村支教 · 浙江后岸", "captionEn": "Rural teaching · Hou'an, Zhejiang" },
+    { "image": "assets/gallery/photo-02.jpg", "captionZh": "返校宣讲 · 作为队长", "captionEn": "School talks as team leader" },
+    { "image": "assets/gallery/photo-03.jpg", "captionZh": "科普大赛 · 一等奖", "captionEn": "Science communication award" },
+    { "image": "assets/gallery/photo-04.jpg", "captionZh": "活动策划 · 现场记录", "captionEn": "Event planning in action" },
+    { "image": "assets/gallery/photo-05.jpg", "captionZh": "长江边 · 志愿服务", "captionEn": "Volunteering by the Yangtze" },
+    { "image": "assets/gallery/photo-06.jpg", "captionZh": "城市与暮色 · 摄影", "captionEn": "City & dusk · photography" },
+    { "image": "assets/gallery/photo-07.jpg", "captionZh": "旅途中的风景", "captionEn": "Scenes from the road" },
+    { "image": "assets/gallery/photo-08.jpg", "captionZh": "校园日常", "captionEn": "Campus life" },
+    { "image": "assets/gallery/photo-09.jpg", "captionZh": "和朋友们", "captionEn": "With friends" }
+  ]
+}

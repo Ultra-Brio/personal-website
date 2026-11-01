@@ -29,6 +29,7 @@
     if (document.getElementById("typingText")) startTyping();
     if (document.getElementById("essayList") && typeof ESSAYS !== "undefined") renderEssays();
     initMotto();
+    if (CONTENT) renderAll(l);
   }
 
   const langToggle = document.getElementById("langToggle");
@@ -95,32 +96,54 @@
     if (a.getAttribute("data-nav") === page) a.classList.add("active");
   });
 
-  /* ================= 配置渲染 ================= */
-  if (typeof SITE_CONFIG !== "undefined") {
+  /* ================= 内容数据（public/content/*.json） =================
+     生产环境：构建脚本已把中文静态注入页面，并内嵌一份 JSON（#content-data）供切换英文；
+     本地开发（无 #content-data）：从 content/*.json 拉取，客户端渲染。 */
+  let CONTENT = null;
+  const hasStaticContent = !!document.getElementById("content-data");
+
+  function applySite(l) {
+    if (!CONTENT) return;
+    const s = CONTENT.site;
     document.querySelectorAll("[data-config-email]").forEach((el) => {
-      if (el.tagName === "A") { el.href = "mailto:" + SITE_CONFIG.email; }
-      el.textContent = SITE_CONFIG.email;
+      if (el.tagName === "A") { el.href = "mailto:" + s.email; }
+      el.textContent = s.email;
     });
     document.querySelectorAll("[data-config-location]").forEach((el) => {
-      el.textContent = SITE_CONFIG.location[lang] || "";
+      el.textContent = l === "en" ? s.locationEn : s.locationZh;
     });
-    // 其他联系方式列表（GitHub/微信/知乎/小红书，空的跳过）
-    const other = document.getElementById("contactOther");
-    if (other) {
-      const items = [
-        ["GitHub", SITE_CONFIG.github],
-        ["微信 / 公众号", SITE_CONFIG.wechat],
-        ["知乎", SITE_CONFIG.zhihu],
-        ["小红书", SITE_CONFIG.xiaohongshu],
-      ].filter(([, v]) => v);
-      other.innerHTML = items.length
-        ? items.map(([k, v]) =>
-            v.startsWith("http")
-              ? `<a class="contact-chip" href="${v}" target="_blank" rel="noopener">${k}</a>`
-              : `<span class="contact-chip">${k} · ${v}</span>`).join("")
-        : `<span class="contact-chip" style="opacity:.5">待补充（在 js/config.js 填写）</span>`;
-    }
   }
+
+  function renderAll(l) {
+    if (!CONTENT || !window.ContentRender) return;
+    const R = window.ContentRender;
+    const set = (name, html) => {
+      const el = document.querySelector(`[data-content="${name}"]`);
+      if (el) el.innerHTML = html;
+    };
+    set("about-intro", R.aboutIntro(CONTENT.about, l));
+    set("about-cares", R.aboutCares(CONTENT.about, l));
+    set("about-motto", R.motto(CONTENT.about, l));
+    const m = document.getElementById("motto");
+    if (m) { delete m.dataset.lit; initMotto(); }
+    set("journey-items", R.journeyItems(CONTENT.journey, l));
+    set("gallery-items", R.galleryItems(CONTENT.gallery, l));
+    set("contact-rows", R.contactRows(CONTENT.site, l));
+    applySite(l);
+  }
+
+  function initContent() {
+    const tag = document.getElementById("content-data");
+    const load = tag
+      ? Promise.resolve(JSON.parse(tag.textContent))
+      : Promise.all(["site", "about", "journey", "gallery"].map((n) => fetch(`content/${n}.json`).then((r) => r.json())))
+          .then(([site, about, journey, gallery]) => ({ site, about, journey, gallery }));
+    load.then((data) => {
+      CONTENT = data;
+      if (!hasStaticContent || lang !== "zh") renderAll(lang);
+    }).catch((err) => console.warn("[site] 内容数据加载失败", err));
+  }
+  document.addEventListener("DOMContentLoaded", initContent);
 
   /* ================= 滚动显现 ================= */
   const io = new IntersectionObserver((entries) => {
@@ -165,18 +188,22 @@
     }));
   }
 
-  /* ================= 相册灯箱（仅相册页） ================= */
-  const items = Array.from(document.querySelectorAll(".masonry-item"));
-  if (items.length) {
+  /* ================= 相册灯箱（仅相册页；委托绑定，重渲染后依旧可用） ================= */
+  const masonry = document.getElementById("masonry");
+  if (masonry) {
     const lightbox = document.getElementById("lightbox");
     const lbImg = document.getElementById("lightboxImg");
     const lbCap = document.getElementById("lightboxCaption");
+    const figs = () => Array.from(masonry.querySelectorAll(".masonry-item"));
     let current = 0;
     const openLb = (i) => {
+      const items = figs();
+      if (!items.length) return;
       current = (i + items.length) % items.length;
       const fig = items[current];
-      lbImg.src = fig.querySelector("img").src;
-      lbImg.alt = fig.querySelector("img").alt;
+      const img = fig.querySelector("img");
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
       lbCap.textContent = fig.querySelector("figcaption").textContent;
       lightbox.classList.add("open");
       lightbox.setAttribute("aria-hidden", "false");
@@ -187,7 +214,10 @@
       lightbox.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
     };
-    items.forEach((fig, i) => fig.addEventListener("click", () => openLb(i)));
+    masonry.addEventListener("click", (e) => {
+      const fig = e.target.closest(".masonry-item");
+      if (fig) openLb(figs().indexOf(fig));
+    });
     document.getElementById("lightboxClose").addEventListener("click", closeLb);
     document.getElementById("lightboxPrev").addEventListener("click", (e) => { e.stopPropagation(); openLb(current - 1); });
     document.getElementById("lightboxNext").addEventListener("click", (e) => { e.stopPropagation(); openLb(current + 1); });

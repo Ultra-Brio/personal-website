@@ -56,7 +56,8 @@
 
 <main>
   <section class="section" style="padding-top: 70px;">
-    <div class="contact-rows reveal">
+    <div class="contact-rows reveal" data-content="contact-rows">
+      <!--content:contact-rows-->
       <div class="contact-row">
         <span class="contact-row-label" data-i18n="contactEmailLabel">邮箱</span>
         <span class="contact-row-value"><a data-config-email href="mailto:xangbo@163.com">xangbo@163.com</a></span>
@@ -69,8 +70,9 @@
         <span class="contact-row-label">📍</span>
         <span class="contact-row-value"><span data-config-location style="font-family: var(--font-zh); color: var(--text); font-size: 0.98rem;">现居上海 · 来自四川宜宾</span></span>
       </div>
+      <!--/content:contact-rows-->
     </div>
-    <p class="contact-config-note reveal" data-i18n="contactNote">以上联系方式统一在 js/config.js 里修改，全站自动更新。</p>
+    <p class="contact-config-note reveal" data-i18n="contactNote">以上联系方式在后台「站点信息」里修改，全站自动更新。</p>
   </section>
 </main>
 
@@ -78,7 +80,7 @@
   <p>© 2026 向博 Xiang Bo · <span data-i18n="footerLine">用代码与暮色写成</span></p>
 </footer>
 
-<script src="js/config.js"></script>
+<script type="module" src="js/content-render.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/main.js"></script>
 </body>

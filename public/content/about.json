@@ -1,0 +1,46 @@
+{
+  "leadZh": "我来自四川宜宾——长江第一城。父母从农村走出来，我上小学之前也在乡村长大。那些山路与江河，塑造了我看待世界的方式：真实、具体、脚踏实地。",
+  "leadEn": "I come from Yibin, Sichuan — the First City on the Yangtze. My parents grew up in rural villages, and so did I before primary school. Those mountain roads and rivers shaped how I see the world: real, concrete, down to earth.",
+  "p1Zh": "我现在就读于上海交通大学安泰经济与管理学院。课堂上，我喜欢金融、产业与技术的交叉地带；课堂外，我保持着两个习惯：一是写作与传播——把专业知识翻译成人人听得懂的话，科普推文曾获医学院科普大赛一等奖；二是走进真实的社会——从长江边的志愿服务到浙江乡村的支教调研。",
+  "p1En": "I now study at Antai College of Economics & Management, Shanghai Jiao Tong University. In class I am drawn to the crossings of finance, industry and technology; outside class I keep two habits: writing and communicating — translating knowledge into plain language (my science-popularisation article won first prize in the Medical School contest); and stepping into the real world — from volunteering along the Yangtze to teaching in rural Zhejiang.",
+  "p2Zh": "我相信「生于此、归于斯」：服务社会不是一时的自我满足，而是一项长期的责任。这个网站也是这个信念的一部分——认真记录，认真生活。",
+  "p2En": "I believe service to society is a long-term responsibility, not a momentary satisfaction. This website is part of that belief — record seriously, live seriously.",
+  "tags": [
+    { "zh": "经济管理试验班", "en": "Economics & Management" },
+    { "zh": "AI × 投研", "en": "AI × Research" },
+    { "zh": "乡村公益", "en": "Rural Public Service" },
+    { "zh": "科普写作", "en": "Science Writing" },
+    { "zh": "信息整合", "en": "Information Curation" },
+    { "zh": "CET-6 609", "en": "CET-6 609" }
+  ],
+  "cares": [
+    {
+      "titleZh": "被看见的角落",
+      "titleEn": "Unseen corners",
+      "descZh": "大厦霓虹照不进民工劳作的深夜，空调冷风吹不到烈日下的脚手架。我关心乡村教育、关心劳动者，关心那些撑起繁华却很少被看见的人。",
+      "descEn": "Neon lights never reach migrant workers late at night; air-conditioning never cools the scaffolds under the blazing sun. I care about rural education, about workers, about the people who hold up the city but are rarely seen."
+    },
+    {
+      "titleZh": "医学走进日常",
+      "titleEn": "Medicine in daily life",
+      "descZh": "护眼、健康、急救常识——把专业知识翻译成大人小孩都用得上的话，是我一直想做的事，也是眼视光背景留给我的习惯。",
+      "descEn": "Eye care, health, first aid — translating professional knowledge into words that actually help people. It is what my optometry background left me."
+    },
+    {
+      "titleZh": "AI 与人的连接",
+      "titleEn": "AI and people",
+      "descZh": "AI 不是替代，而是放大器：帮投研提效、帮课堂变得有趣、帮信息差被填平。我关心它如何真实地帮到具体的人。",
+      "descEn": "AI is not a replacement but an amplifier: faster research, livelier classrooms, smaller information gaps. I care about how it truly helps specific people."
+    },
+    {
+      "titleZh": "长江与故乡",
+      "titleEn": "The river & hometown",
+      "descZh": "从翠屏山到黄浦江，生于此、归于斯。每年回老家看到的反差，是我很多想法的起点。",
+      "descEn": "From Cuiping Mountain to the Huangpu River — born here, rooted here. The contrast I see every time I go home is where many of my thoughts start."
+    }
+  ],
+  "mottoZh": "生于此，归于斯。服务社会不是一时的自我满足，而是一项长期的责任——认真记录，认真生活。",
+  "mottoEn": "Born here, rooted here. Service to society is a long-term responsibility, not a momentary satisfaction — record seriously, live seriously.",
+  "mottoSrcZh": "—— 关于 · 向博",
+  "mottoSrcEn": "—— About · Xiang Bo"
+}

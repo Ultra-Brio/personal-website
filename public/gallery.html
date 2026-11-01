@@ -58,7 +58,8 @@
   <section class="section" style="padding-top: 70px;">
     <!-- 相册槽位：把照片命名为 photo-01.jpg ~ photo-09.jpg 放进 assets/gallery/ 即自动显示；
          没放的照片自动显示占位图。说明文字改下面的 figcaption 和 data-caption-* -->
-    <div class="masonry reveal" id="masonry">
+    <div class="masonry reveal" id="masonry" data-content="gallery-items">
+      <!--content:gallery-items-->
       <figure class="masonry-item" data-caption-zh="乡村支教 · 浙江后岸" data-caption-en="Rural teaching · Hou'an, Zhejiang">
         <img src="assets/gallery/photo-01.jpg" alt="乡村支教" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-1.svg?v=2'">
         <figcaption>乡村支教 · 浙江后岸</figcaption>
@@ -95,6 +96,7 @@
         <img src="assets/gallery/photo-09.jpg" alt="和朋友们" loading="lazy" onerror="this.onerror=null;this.src='assets/gallery/placeholder-1.svg?v=2'">
         <figcaption>和朋友们</figcaption>
       </figure>
+      <!--/content:gallery-items-->
     </div>
   </section>
 </main>
@@ -116,6 +118,7 @@
 
 <script src="js/config.js"></script>
 <script src="js/i18n.js"></script>
+<script type="module" src="js/content-render.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
